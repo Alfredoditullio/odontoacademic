@@ -18,7 +18,7 @@ export default function NewPostPage() {
   const isClinical = categorySlug === 'casos-clinicos';
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl">
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
         <h1 className="text-xl font-bold text-slate-900 mb-6">Nuevo post</h1>
 

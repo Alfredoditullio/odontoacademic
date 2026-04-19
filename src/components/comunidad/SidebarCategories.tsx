@@ -98,20 +98,6 @@ export function CommunitySidebar() {
         );
       })}
 
-      {/* Settings at the bottom */}
-      <div className="pt-4 mt-2 border-t border-slate-100">
-        <Link
-          href="/comunidad/configuracion"
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition ${
-            isActive('/comunidad/configuracion')
-              ? 'bg-slate-100 text-slate-900 font-semibold'
-              : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-          }`}
-        >
-          <span className="material-symbols-outlined text-[20px] text-slate-400">settings</span>
-          Configuración
-        </Link>
-      </div>
     </nav>
   );
 }

@@ -169,7 +169,7 @@ export default function ConfiguracionPage() {
   const displayInitials = profile.displayName ? initials(profile.displayName) : 'YO';
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl space-y-6">
 
       {/* Page header */}
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">

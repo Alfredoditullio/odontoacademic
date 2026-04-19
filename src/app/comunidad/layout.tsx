@@ -15,7 +15,7 @@ export default function CommunityLayout({ children }: { children: React.ReactNod
         </aside>
         {/* Main content fills remaining space */}
         <div className="flex-1 min-w-0 bg-slate-50">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="px-5 py-6">
             {children}
           </div>
         </div>
