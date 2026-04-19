@@ -15,20 +15,12 @@ const VALUES = [
 
 const TEAM = [
   {
-    name: 'Dr. Javier Torres',
-    role: 'Fundador & Administrador',
-    specialty: 'Gestión y Dirección',
-    icon: 'admin_panel_settings',
-    color: 'from-sky-500 to-blue-600',
-    bio: 'Fundador de OdontoAcademic. Lidera la visión estratégica de la plataforma, asegurando que cada recurso y herramienta cumpla con los más altos estándares de calidad para la comunidad.',
-  },
-  {
-    name: 'Od. Alfredo Di Tullio',
-    role: 'Director de Tecnología',
+    name: 'Alfredo Di Tullio',
+    role: 'Fundador & CEO',
     specialty: 'IA y Tecnología',
-    icon: 'smart_toy',
-    color: 'from-violet-500 to-purple-600',
-    bio: 'Especialista en inteligencia artificial aplicada a la odontología. Responsable del desarrollo tecnológico de la plataforma y la integración de herramientas de IA.',
+    icon: 'rocket_launch',
+    color: 'from-sky-500 to-blue-600',
+    bio: 'Fundador de OdontoLatam. Odontólogo especialista en inteligencia artificial y tecnología aplicada a la práctica clínica. Lidera la visión estratégica y el desarrollo tecnológico de la plataforma.',
   },
   {
     name: 'Dra. Lucía Fernández',
@@ -75,7 +67,7 @@ export default function NosotrosPage() {
           </div>
           <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4" style={{ animationDelay: '0.15s' }}>
             Sobre{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-teal-300">OdontoAcademic</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-teal-300">OdontoLatam</span>
           </h1>
           <p className="animate-fade-in-up text-lg text-white/80 max-w-2xl mx-auto" style={{ animationDelay: '0.3s' }}>
             Somos una plataforma dedicada a elevar el nivel de la odontología en Latinoamérica a través de educación continua, recursos académicos y comunidad profesional.

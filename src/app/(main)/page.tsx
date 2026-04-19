@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { BLOG_POSTS } from '@/data/mock-blog';
 
 const FEATURES = [
@@ -12,7 +11,7 @@ const FEATURES = [
 ];
 
 const TESTIMONIALS = [
-  { name: 'Dr. Martín Rodríguez', specialty: 'Implantólogo — Buenos Aires', text: 'OdontoAcademic transformó la forma en que me mantengo actualizado. Los recursos bibliográficos y la comunidad son de primer nivel.' },
+  { name: 'Dr. Martín Rodríguez', specialty: 'Implantólogo — Buenos Aires', text: 'OdontoLatam transformó la forma en que me mantengo actualizado. Los casos clínicos que comparten los colegas y la comunidad son de primer nivel.' },
   { name: 'Dra. Lucía Fernández', specialty: 'Periodoncista — CDMX', text: 'La comunidad me permitió conectar con colegas de toda Latinoamérica. Los debates clínicos son increíblemente enriquecedores.' },
   { name: 'Dr. Carlos Méndez', specialty: 'Radiólogo — Bogotá', text: 'El atlas de patología oral es una herramienta indispensable en mi práctica diaria. Excelente calidad de contenido.' },
 ];
@@ -120,18 +119,50 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Mascot */}
-          <div className="hidden lg:flex flex-1 justify-center items-end relative">
-            <div className="animate-fade-in-up relative" style={{ animationDelay: '0.4s' }}>
-              <div className="absolute -inset-8 bg-gradient-to-br from-sky-500/20 to-teal-500/20 rounded-full blur-3xl" />
-              <Image
-                src="/doctorcito.png"
-                alt="OdontoAcademic mascota"
-                width={380}
-                height={380}
-                className="relative animate-float drop-shadow-2xl"
-                priority
-              />
+          {/* Hero visual — community card mockup */}
+          <div className="hidden lg:flex flex-1 justify-center items-center relative">
+            <div className="animate-fade-in-up relative w-full max-w-[380px]" style={{ animationDelay: '0.4s' }}>
+              <div className="absolute -inset-10 bg-gradient-to-br from-sky-500/15 to-teal-500/15 rounded-full blur-3xl" />
+              {/* Floating card stack */}
+              <div className="relative space-y-3">
+                {/* Main community card */}
+                <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 animate-float">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="size-10 rounded-full bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center text-white text-sm font-bold shrink-0">MR</div>
+                    <div>
+                      <div className="text-white font-semibold text-sm">Dr. Martín Rodríguez</div>
+                      <div className="text-white/60 text-xs">Implantólogo · Buenos Aires</div>
+                    </div>
+                  </div>
+                  <p className="text-white/80 text-sm leading-relaxed">Comparto caso de implante inmediato post-extracción con carga provisional. ¿Qué protocolo prefieren para el torque de inserción?</p>
+                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/10">
+                    <span className="flex items-center gap-1 text-white/60 text-xs"><span className="material-symbols-outlined text-[15px]">favorite</span>48</span>
+                    <span className="flex items-center gap-1 text-white/60 text-xs"><span className="material-symbols-outlined text-[15px]">chat_bubble</span>23 respuestas</span>
+                  </div>
+                </div>
+                {/* Mini stats card */}
+                <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-5 py-3 flex items-center justify-between animate-float" style={{ animationDelay: '0.5s' }}>
+                  <div className="text-center">
+                    <div className="text-white font-extrabold text-lg">5k+</div>
+                    <div className="text-white/50 text-[10px] font-medium">Miembros</div>
+                  </div>
+                  <div className="w-px h-8 bg-white/15" />
+                  <div className="text-center">
+                    <div className="text-white font-extrabold text-lg">15</div>
+                    <div className="text-white/50 text-[10px] font-medium">Países</div>
+                  </div>
+                  <div className="w-px h-8 bg-white/15" />
+                  <div className="text-center">
+                    <div className="text-white font-extrabold text-lg">10k+</div>
+                    <div className="text-white/50 text-[10px] font-medium">Casos</div>
+                  </div>
+                </div>
+                {/* Live indicator */}
+                <div className="bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 rounded-xl px-4 py-2.5 flex items-center gap-2 animate-float" style={{ animationDelay: '1s' }}>
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                  <span className="text-emerald-200 text-xs font-semibold">327 odontólogos conectados ahora</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -515,7 +546,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl font-extrabold text-slate-900 mb-3">Lo que dicen nuestros miembros</h2>
-            <p className="text-lg text-slate-500">Miles de odontólogos ya son parte de OdontoAcademic.</p>
+            <p className="text-lg text-slate-500">Miles de odontólogos ya son parte de OdontoLatam.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t) => (
@@ -562,14 +593,25 @@ export default function HomePage() {
                   <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
                 </Link>
               </div>
-              <div className="hidden lg:block shrink-0">
-                <Image
-                  src="/doctorcito.png"
-                  alt="OdontoAcademic"
-                  width={220}
-                  height={220}
-                  className="animate-float drop-shadow-2xl"
-                />
+              <div className="hidden lg:flex shrink-0 flex-col gap-3 items-end">
+                {/* OdontoLatam logo mark */}
+                <div className="size-28 rounded-3xl bg-gradient-to-br from-sky-400/20 to-teal-400/20 border border-white/10 flex items-center justify-center">
+                  <svg viewBox="0 0 80 80" className="size-20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {/* Globe */}
+                    <circle cx="40" cy="40" r="32" stroke="rgba(125,211,252,0.5)" strokeWidth="2"/>
+                    <ellipse cx="40" cy="40" rx="14" ry="32" stroke="rgba(125,211,252,0.5)" strokeWidth="1.5"/>
+                    <line x1="8" y1="40" x2="72" y2="40" stroke="rgba(125,211,252,0.5)" strokeWidth="1.5"/>
+                    <line x1="12" y1="26" x2="68" y2="26" stroke="rgba(125,211,252,0.3)" strokeWidth="1"/>
+                    <line x1="12" y1="54" x2="68" y2="54" stroke="rgba(125,211,252,0.3)" strokeWidth="1"/>
+                    {/* Tooth */}
+                    <path d="M40 18 C34 18 29 22 29 29 C29 33 31 35 31 40 L49 40 C49 35 51 33 51 29 C51 22 46 18 40 18Z" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5"/>
+                    <path d="M31 40 C31 40 32 48 34 52 C35 54 36 54 37 52 L40 44 L43 52 C44 54 45 54 46 52 C48 48 49 40 49 40Z" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5"/>
+                  </svg>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 rounded-xl px-4 py-2">
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-white/80 text-xs font-semibold">Comunidad activa 24/7</span>
+                </div>
               </div>
             </div>
           </div>

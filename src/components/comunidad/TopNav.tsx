@@ -12,7 +12,7 @@ export function CommunityTopNav() {
           </div>
           <div className="leading-tight">
             <div className="flex items-center gap-2">
-              <span className="text-lg sm:text-xl font-extrabold tracking-tight">Comunidad OdontoAcademic</span>
+              <span className="text-lg sm:text-xl font-extrabold tracking-tight">Comunidad OdontoLatam</span>
               <span className="text-[10px] font-bold bg-amber-300 text-amber-900 px-1.5 py-0.5 rounded">BETA</span>
             </div>
             <div className="text-[11px] sm:text-xs text-white/80 font-medium hidden sm:block">

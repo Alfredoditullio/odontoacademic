@@ -52,11 +52,11 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="size-10 rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-              <span className="material-symbols-outlined text-white text-[22px]">school</span>
+              <span className="material-symbols-outlined text-white text-[22px]">public</span>
             </div>
             <div className="leading-tight">
-              <span className="text-lg font-extrabold text-slate-900 tracking-tight">OdontoAcademic</span>
-              <div className="text-[10px] text-slate-400 font-medium hidden sm:block">Educación dental continua</div>
+              <span className="text-lg font-extrabold text-slate-900 tracking-tight">OdontoLatam</span>
+              <div className="text-[10px] text-slate-400 font-medium hidden sm:block">La comunidad dental de LATAM</div>
             </div>
           </Link>
 

@@ -6,16 +6,16 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: {
-    default: 'OdontoAcademic — Educación Dental Continua',
-    template: '%s | OdontoAcademic',
+    default: 'OdontoLatam — La Comunidad Dental de Latinoamérica',
+    template: '%s | OdontoLatam',
   },
   description:
-    'La plataforma de educación dental continua más completa de Latinoamérica. Bibliografía, atlas de patología oral, cursos, comunidad profesional y tienda de instrumental.',
-  keywords: ['odontología', 'educación dental', 'implantología', 'endodoncia', 'periodoncia', 'comunidad dental'],
+    'La comunidad de odontólogos más grande de Latinoamérica. Casos clínicos, bibliografía, atlas de patología oral, cursos, marketplace y networking profesional.',
+  keywords: ['odontología', 'comunidad dental', 'implantología', 'endodoncia', 'periodoncia', 'educación dental latina'],
   openGraph: {
     type: 'website',
     locale: 'es_AR',
-    siteName: 'OdontoAcademic',
+    siteName: 'OdontoLatam',
   },
 };
 

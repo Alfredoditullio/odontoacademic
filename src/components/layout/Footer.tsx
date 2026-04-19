@@ -38,12 +38,12 @@ export function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
               <div className="size-10 rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center">
-                <span className="material-symbols-outlined text-white text-[22px]">school</span>
+                <span className="material-symbols-outlined text-white text-[22px]">public</span>
               </div>
-              <span className="text-lg font-extrabold tracking-tight">OdontoAcademic</span>
+              <span className="text-lg font-extrabold tracking-tight">OdontoLatam</span>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-sm">
-              La plataforma de educación dental continua más completa de Latinoamérica. Recursos académicos, comunidad profesional y herramientas para tu práctica clínica.
+              La comunidad de odontólogos más grande de Latinoamérica. Casos clínicos, recursos académicos y networking profesional para potenciar tu práctica.
             </p>
 
             {/* Newsletter form */}
@@ -92,7 +92,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} OdontoAcademic. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} OdontoLatam. Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-4">
             {SOCIAL_LINKS.map((social) => (

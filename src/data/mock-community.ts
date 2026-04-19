@@ -108,7 +108,7 @@ export const MOCK_CATEGORIES: Category[] = [
   { slug: 'casos-clinicos', name: 'Casos Clínicos', description: 'Compartí casos clínicos con colegas', icon: 'stethoscope', color: '#10b981', sort_order: 2, post_policy: 'open' },
   { slug: 'marketing-dental', name: 'Marketing Dental', description: 'Tips y estrategias de marketing', icon: 'campaign', color: '#f59e0b', sort_order: 3, post_policy: 'admin_only' },
   { slug: 'ia-tecnologia', name: 'IA y Tecnología', description: 'Inteligencia artificial y tecnología dental', icon: 'smart_toy', color: '#8b5cf6', sort_order: 4, post_policy: 'admin_only' },
-  { slug: 'novedades-dentalcore', name: 'Novedades OdontoAcademic', description: 'Actualizaciones de la plataforma', icon: 'new_releases', color: '#ef4444', sort_order: 5, post_policy: 'admin_only' },
+  { slug: 'novedades-odontolatam', name: 'Novedades OdontoLatam', description: 'Actualizaciones de la plataforma', icon: 'new_releases', color: '#ef4444', sort_order: 5, post_policy: 'admin_only' },
   { slug: 'mercado', name: 'Mercado', description: 'Comprá, vendé o permutá instrumental', icon: 'storefront', color: '#059669', sort_order: 6, post_policy: 'open' },
 ];
 
