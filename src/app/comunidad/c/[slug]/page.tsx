@@ -6,6 +6,7 @@ import { MOCK_POSTS, MOCK_CATEGORIES } from '@/data/mock-community';
 import { PostCard } from '@/components/comunidad/PostCard';
 import { ClinicalPostModal } from '@/components/comunidad/ClinicalPostModal';
 import { PresentationModal, type PresentationRecord } from '@/components/comunidad/PresentationModal';
+import { MarketModal } from '@/components/comunidad/MarketModal';
 
 const SIX_MONTHS_MS = 1000 * 60 * 60 * 24 * 30 * 6;
 const LS_KEY = 'ol_presentation';
@@ -28,6 +29,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   const [showClinicalModal, setShowClinicalModal] = useState(false);
   const [showPresentationModal, setShowPresentationModal] = useState(false);
+  const [showMarketModal, setShowMarketModal] = useState(false);
 
   // Presentation state (loaded from localStorage)
   const [presentation, setPresentation] = useState<PresentationRecord | null>(null);
@@ -58,6 +60,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   const isClinical       = slug === 'casos-clinicos';
   const isPresentation   = slug === 'presentaciones';
+  const isMarket         = slug === 'mercado';
 
   // Presentation logic
   const alreadyPresented = !!presentation;
@@ -71,6 +74,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
     <>
       {showClinicalModal     && <ClinicalPostModal onClose={() => setShowClinicalModal(false)} />}
       {showPresentationModal && <PresentationModal onClose={() => setShowPresentationModal(false)} onPosted={handlePosted} />}
+      {showMarketModal       && <MarketModal onClose={() => setShowMarketModal(false)} />}
 
       <div className="space-y-4">
 
@@ -96,6 +100,18 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
                 <span className="hidden sm:inline">Publicar caso</span>
+                <span className="sm:hidden">Publicar</span>
+              </button>
+            )}
+
+            {/* ── CTA: Mercado ── */}
+            {isMarket && (
+              <button
+                onClick={() => setShowMarketModal(true)}
+                className="shrink-0 inline-flex items-center gap-2 bg-white text-emerald-700 font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-emerald-50 transition shadow-sm"
+              >
+                <span className="material-symbols-outlined text-[18px]">add</span>
+                <span className="hidden sm:inline">Publicar aviso</span>
                 <span className="sm:hidden">Publicar</span>
               </button>
             )}
@@ -184,6 +200,16 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                 </>
               )}
             </div>
+          </div>
+        )}
+
+        {/* Market disclaimer */}
+        {isMarket && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
+            <span className="material-symbols-outlined text-amber-500 text-[20px] shrink-0 mt-0.5">gavel</span>
+            <p className="text-xs text-amber-700 leading-relaxed">
+              <strong>OdontoLatam no participa en ninguna transacción.</strong> Este espacio es solo para conectar compradores y vendedores de la comunidad odontológica. No verificamos anuncios, no gestionamos pagos ni envíos, y no nos responsabilizamos por acuerdos entre partes. Siempre acordá directamente con el otro usuario y actuá con precaución.
+            </p>
           </div>
         )}
 
