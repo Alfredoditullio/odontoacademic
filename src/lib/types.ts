@@ -85,7 +85,9 @@ export interface Profile {
   follower_count: number;
   following_count: number;
   rules_accepted_at: string | null;
-  role: 'member' | 'moderator' | 'admin';
+  role: 'member' | 'moderator' | 'admin' | 'student';
+  study_year?: number | null;   // 1–6, students only
+  university?: string | null;
   created_at: string;
   updated_at: string;
 }

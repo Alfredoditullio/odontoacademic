@@ -44,10 +44,35 @@ function OfficialBadge() {
   );
 }
 
+const STUDY_YEAR_LABEL: Record<number, string> = { 1: '1°', 2: '2°', 3: '3°', 4: '4°', 5: '5°', 6: '6°' };
+
+function RoleBadge({ role, studyYear }: { role: string; studyYear?: number | null }) {
+  if (role === 'student') {
+    const year = studyYear ? `${STUDY_YEAR_LABEL[studyYear]} año` : 'Estudiante';
+    return (
+      <span className="inline-flex items-center gap-1 text-[10px] font-black bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
+        <span className="material-symbols-outlined text-[11px]">school</span>
+        {studyYear ? `Estudiante · ${year}` : 'Estudiante'}
+      </span>
+    );
+  }
+  if (role === 'moderator') {
+    return (
+      <span className="inline-flex items-center gap-1 text-[10px] font-black bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full border border-teal-200">
+        <span className="material-symbols-outlined text-[11px]">shield</span>
+        Moderador
+      </span>
+    );
+  }
+  return null;
+}
+
 export function PostCard({ post }: { post: PostWithAuthor }) {
   const typeBadge = post.post_type ? POST_TYPE_BADGE[post.post_type] : null;
   const isSalaDeEspera = post.category.slug === 'sala-de-espera';
+  const isCarrera = post.category.slug === 'carrera-estudios';
   const isOfficialCreator = (post.author.follower_count ?? 0) > 1000;
+  const isStudent = post.author.role === 'student';
 
   // Poll data from metadata
   const pollOptions = (post.metadata as Record<string, unknown>)?.poll_options as PollOption[] | undefined;
@@ -58,7 +83,9 @@ export function PostCard({ post }: { post: PostWithAuthor }) {
     <article className={`bg-white rounded-xl border transition p-5 ${
       isSalaDeEspera
         ? 'border-orange-200 hover:border-orange-300 hover:shadow-sm'
-        : 'border-slate-200 hover:border-slate-300'
+        : isCarrera
+          ? 'border-indigo-100 hover:border-indigo-200 hover:shadow-sm'
+          : 'border-slate-200 hover:border-slate-300'
     }`}>
       <header className="flex items-center gap-3 mb-3">
         <Link
@@ -76,11 +103,18 @@ export function PostCard({ post }: { post: PostWithAuthor }) {
               {post.author.display_name}
             </Link>
             {isOfficialCreator && isSalaDeEspera && <OfficialBadge />}
+            {(isStudent || post.author.role === 'moderator') && (
+              <RoleBadge role={post.author.role} studyYear={post.author.study_year} />
+            )}
             {post.author.country && (
               <span className="text-xs text-slate-400">· {post.author.country}</span>
             )}
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-500">
+            {isStudent && post.author.university && (
+              <span className="text-indigo-400 font-medium">{post.author.university}</span>
+            )}
+            {isStudent && post.author.university && <span>·</span>}
             <Link
               href={`/comunidad/c/${post.category.slug}`}
               className="inline-flex items-center gap-1 font-medium hover:opacity-80 transition"

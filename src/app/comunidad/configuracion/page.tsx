@@ -9,6 +9,14 @@ const SPECIALTIES = [
   'Estética Dental', 'Odontopediatría', 'Radiología Oral', 'Docencia / Investigación', 'Otra',
 ];
 
+const STUDENT_INTERESTS = [
+  'Sin definir aún', 'Odontología General', 'Implantología', 'Periodoncia',
+  'Endodoncia', 'Ortodoncia', 'Cirugía Oral', 'Rehabilitación Oral',
+  'Estética Dental', 'Odontopediatría', 'Investigación',
+];
+
+const STUDY_YEARS = ['1° año', '2° año', '3° año', '4° año', '5° año', '6° año'];
+
 const COUNTRIES = [
   'Argentina', 'México', 'Colombia', 'Chile', 'Venezuela', 'Perú',
   'Uruguay', 'Ecuador', 'Bolivia', 'Paraguay', 'Brasil', 'España', 'Otro',
@@ -28,6 +36,10 @@ interface ProfileData {
   licenseNumber: string; bio: string; country: string; city: string;
   phone: string; website: string; acceptsReferrals: boolean;
   avatarInitials: string; avatarColor: string;
+  // Student / Professional role
+  accountRole: 'professional' | 'student';
+  studyYear: string;
+  university: string;
 }
 
 interface NotifData {
@@ -51,6 +63,7 @@ const DEFAULT_PROFILE: ProfileData = {
   displayName: '', handle: '', specialty: '', licenseNumber: '',
   bio: '', country: '', city: '', phone: '', website: '',
   acceptsReferrals: true, avatarInitials: 'MR', avatarColor: AVATAR_COLORS[0],
+  accountRole: 'professional', studyYear: '', university: '',
 };
 
 const DEFAULT_NOTIF: NotifData = {
@@ -184,7 +197,10 @@ export default function ConfiguracionPage() {
               {profile.displayName || 'Tu nombre'}
             </h1>
             <p className="text-sm text-slate-500">
-              {profile.specialty || 'Tu especialidad'}{profile.city ? ` · ${profile.city}` : ''}
+              {profile.accountRole === 'student'
+                ? `${profile.studyYear || 'Estudiante'}${profile.university ? ` · ${profile.university}` : ''}${profile.city ? ` · ${profile.city}` : ''}`
+                : `${profile.specialty || 'Tu especialidad'}${profile.city ? ` · ${profile.city}` : ''}`
+              }
             </p>
           </div>
 
@@ -226,6 +242,81 @@ export default function ConfiguracionPage() {
           {/* ════════════ PERFIL ════════════ */}
           {tab === 'perfil' && (
             <div className="space-y-5">
+
+              {/* ── Selector de rol ── */}
+              <div>
+                <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-3">Soy...</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    {
+                      value: 'professional',
+                      icon: 'stethoscope',
+                      label: 'Odontólogo/a',
+                      desc: 'Profesional graduado o en residencia',
+                      color: 'border-sky-400 bg-sky-50 ring-2 ring-sky-200',
+                      iconColor: 'text-sky-600',
+                    },
+                    {
+                      value: 'student',
+                      icon: 'school',
+                      label: 'Estudiante',
+                      desc: 'Cursando la carrera de odontología',
+                      color: 'border-indigo-400 bg-indigo-50 ring-2 ring-indigo-200',
+                      iconColor: 'text-indigo-600',
+                    },
+                  ].map((r) => (
+                    <button
+                      key={r.value}
+                      type="button"
+                      onClick={() => setP('accountRole', r.value as 'professional' | 'student')}
+                      className={`relative flex flex-col items-center text-center px-4 py-4 rounded-xl border-2 transition-all duration-200 ${
+                        profile.accountRole === r.value ? r.color : 'border-slate-200 hover:border-slate-300 bg-white'
+                      }`}
+                    >
+                      <span className={`material-symbols-outlined text-[28px] mb-1.5 ${profile.accountRole === r.value ? r.iconColor : 'text-slate-400'}`}>
+                        {r.icon}
+                      </span>
+                      <span className="text-sm font-bold text-slate-800">{r.label}</span>
+                      <span className="text-[11px] text-slate-400 mt-0.5 leading-tight">{r.desc}</span>
+                      {profile.accountRole === r.value && (
+                        <span className="absolute -top-1.5 -right-1.5 size-5 rounded-full bg-sky-600 flex items-center justify-center">
+                          <span className="material-symbols-outlined text-white text-[13px]">check</span>
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Campos exclusivos de estudiante ── */}
+              {profile.accountRole === 'student' && (
+                <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 space-y-4">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-indigo-400">Datos académicos</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">Año de cursada *</label>
+                      <select
+                        value={profile.studyYear}
+                        onChange={(e) => setP('studyYear', e.target.value)}
+                        className="w-full border border-indigo-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 text-slate-700"
+                      >
+                        <option value="">Seleccioná tu año...</option>
+                        {STUDY_YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">Facultad / Universidad</label>
+                      <input
+                        value={profile.university}
+                        onChange={(e) => setP('university', e.target.value)}
+                        placeholder="Ej: UBA, UNAM, U. de Chile..."
+                        className="w-full border border-indigo-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 placeholder:text-slate-300"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Nombre */}
                 <div>
@@ -254,35 +345,43 @@ export default function ConfiguracionPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Especialidad */}
+                {/* Especialidad / Área de interés */}
                 <div>
-                  <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">Especialidad *</label>
+                  <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                    {profile.accountRole === 'student' ? 'Área de interés' : 'Especialidad *'}
+                  </label>
                   <select
                     value={profile.specialty}
                     onChange={(e) => setP('specialty', e.target.value)}
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700"
                   >
-                    <option value="">Seleccioná tu especialidad...</option>
-                    {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
+                    <option value="">
+                      {profile.accountRole === 'student' ? '¿Qué te interesa más?' : 'Seleccioná tu especialidad...'}
+                    </option>
+                    {(profile.accountRole === 'student' ? STUDENT_INTERESTS : SPECIALTIES).map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
                   </select>
                 </div>
-                {/* Matrícula */}
-                <div>
-                  <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">
-                    Número de Matrícula
-                    <span className="ml-1.5 inline-flex items-center gap-0.5 text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full normal-case tracking-normal">
-                      <span className="material-symbols-outlined text-[10px]">schedule</span>
-                      Pendiente verificación
-                    </span>
-                  </label>
-                  <input
-                    value={profile.licenseNumber}
-                    onChange={(e) => setP('licenseNumber', e.target.value)}
-                    placeholder="Ej: 12345 (Colegio Odontológico)"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-slate-300"
-                  />
-                  <p className="text-[10px] text-slate-400 mt-1">Cuando esté verificada, aparecerá un badge en tu perfil.</p>
-                </div>
+                {/* Matrícula — solo para profesionales */}
+                {profile.accountRole === 'professional' && (
+                  <div>
+                    <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                      Número de Matrícula
+                      <span className="ml-1.5 inline-flex items-center gap-0.5 text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full normal-case tracking-normal">
+                        <span className="material-symbols-outlined text-[10px]">schedule</span>
+                        Pendiente verificación
+                      </span>
+                    </label>
+                    <input
+                      value={profile.licenseNumber}
+                      onChange={(e) => setP('licenseNumber', e.target.value)}
+                      placeholder="Ej: 12345 (Colegio Odontológico)"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-slate-300"
+                    />
+                    <p className="text-[10px] text-slate-400 mt-1">Cuando esté verificada, aparecerá un badge en tu perfil.</p>
+                  </div>
+                )}
               </div>
 
               {/* Bio */}
@@ -360,7 +459,8 @@ export default function ConfiguracionPage() {
                 </div>
               </div>
 
-              {/* Acepta derivaciones */}
+              {/* Acepta derivaciones — solo profesionales */}
+              {profile.accountRole === 'professional' && (
               <div className="flex items-center justify-between bg-slate-50 rounded-xl px-4 py-3.5 border border-slate-200">
                 <div>
                   <p className="text-sm font-bold text-slate-800">Acepto derivaciones</p>
@@ -368,6 +468,7 @@ export default function ConfiguracionPage() {
                 </div>
                 <Toggle checked={profile.acceptsReferrals} onChange={(v) => setP('acceptsReferrals', v)} />
               </div>
+              )}
 
               <SaveBar onSave={save} saved={saved} />
             </div>

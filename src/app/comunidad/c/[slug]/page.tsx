@@ -8,6 +8,7 @@ import { ClinicalPostModal } from '@/components/comunidad/ClinicalPostModal';
 import { PresentationModal, type PresentationRecord } from '@/components/comunidad/PresentationModal';
 import { MarketModal } from '@/components/comunidad/MarketModal';
 import { SalaDeEsperaModal } from '@/components/comunidad/SalaDeEsperaModal';
+import { StudentPostModal } from '@/components/comunidad/StudentPostModal';
 import { OFFICIAL_CREATORS } from '@/data/mock-community';
 
 const SIX_MONTHS_MS = 1000 * 60 * 60 * 24 * 30 * 6;
@@ -33,6 +34,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   const [showPresentationModal, setShowPresentationModal] = useState(false);
   const [showMarketModal, setShowMarketModal] = useState(false);
   const [showSalaModal, setShowSalaModal] = useState(false);
+  const [showStudentModal, setShowStudentModal] = useState(false);
 
   // Presentation state (loaded from localStorage)
   const [presentation, setPresentation] = useState<PresentationRecord | null>(null);
@@ -65,6 +67,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   const isPresentation   = slug === 'presentaciones';
   const isMarket         = slug === 'mercado';
   const isSala           = slug === 'sala-de-espera';
+  const isCarrera        = slug === 'carrera-estudios';
 
   // Presentation logic
   const alreadyPresented = !!presentation;
@@ -80,6 +83,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
       {showPresentationModal && <PresentationModal onClose={() => setShowPresentationModal(false)} onPosted={handlePosted} />}
       {showMarketModal       && <MarketModal onClose={() => setShowMarketModal(false)} />}
       {showSalaModal         && <SalaDeEsperaModal onClose={() => setShowSalaModal(false)} />}
+      {showStudentModal      && <StudentPostModal onClose={() => setShowStudentModal(false)} />}
 
       <div className="space-y-4">
 
@@ -128,6 +132,18 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
                 <span className="hidden sm:inline">Publicar aviso</span>
+                <span className="sm:hidden">Publicar</span>
+              </button>
+            )}
+
+            {/* ── CTA: Carrera & Estudios ── */}
+            {isCarrera && (
+              <button
+                onClick={() => setShowStudentModal(true)}
+                className="shrink-0 inline-flex items-center gap-2 bg-white text-indigo-700 font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-indigo-50 transition shadow-sm"
+              >
+                <span className="material-symbols-outlined text-[18px]">edit</span>
+                <span className="hidden sm:inline">Publicar</span>
                 <span className="sm:hidden">Publicar</span>
               </button>
             )}
@@ -256,6 +272,31 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
             <p className="text-xs text-amber-700 leading-relaxed">
               <strong>OdontoLatam no participa en ninguna transacción.</strong> Este espacio es solo para conectar compradores y vendedores de la comunidad odontológica. No verificamos anuncios, no gestionamos pagos ni envíos, y no nos responsabilizamos por acuerdos entre partes. Siempre acordá directamente con el otro usuario y actuá con precaución.
             </p>
+          </div>
+        )}
+
+        {/* Carrera & Estudios — info box */}
+        {isCarrera && (
+          <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-4 space-y-3">
+            <div className="flex items-start gap-3">
+              <span className="material-symbols-outlined text-indigo-500 text-[20px] shrink-0 mt-0.5">school</span>
+              <p className="text-xs text-indigo-700 leading-relaxed">
+                <strong>Este espacio es de todos, pero nació para los estudiantes.</strong> Preguntá sin miedo — las dudas académicas son bienvenidas y los odontólogos de la comunidad pueden responder. Los comentarios se muestran con el rol de quien los escribe, así sabés si es un estudiante o un especialista.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 pl-8">
+              {[
+                { icon: 'help', label: 'Dudas académicas', color: 'text-indigo-600 bg-indigo-100' },
+                { icon: 'medical_services', label: 'Clínica y práctica', color: 'text-teal-600 bg-teal-100' },
+                { icon: 'groups', label: 'Vida universitaria', color: 'text-violet-600 bg-violet-100' },
+                { icon: 'forum', label: 'Debates', color: 'text-rose-600 bg-rose-100' },
+              ].map(({ icon, label, color }) => (
+                <span key={label} className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full ${color}`}>
+                  <span className="material-symbols-outlined text-[12px]">{icon}</span>
+                  {label}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
