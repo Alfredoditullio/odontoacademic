@@ -7,7 +7,6 @@ import { MOCK_CATEGORIES } from '@/data/mock-community';
 const COMMUNITY_LINKS = [
   { href: '/comunidad/directorio', icon: 'group', color: '#7c3aed', label: 'Directorio' },
   { href: '/comunidad/eventos', icon: 'event', color: '#0891b2', label: 'Eventos' },
-  { href: '/comunidad/mensajes', icon: 'mail', color: '#2563eb', label: 'Mensajes' },
 ];
 
 const RESOURCE_LINKS = [
