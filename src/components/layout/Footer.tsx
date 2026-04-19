@@ -8,6 +8,7 @@ const FOOTER_LINKS = {
     { href: '/nosotros', label: 'Nosotros' },
     { href: '/blog', label: 'Blog' },
     { href: '/tienda', label: 'Tienda' },
+    { href: '/faq', label: 'Preguntas frecuentes' },
   ],
   'Recursos': [
     { href: '/recursos/vademecum', label: 'Vademécum' },
@@ -90,21 +91,61 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} OdontoLatam. Todos los derechos reservados.
-          </p>
-          <div className="flex items-center gap-4">
-            {SOCIAL_LINKS.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                className="text-slate-500 hover:text-white transition"
-                title={social.label}
-              >
-                <span className="text-xs font-semibold">{social.label}</span>
-              </a>
-            ))}
+        <div className="mt-12 pt-8 border-t border-slate-800 space-y-4">
+          {/* Legal links row */}
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <Link href="/privacidad" className="text-xs text-slate-500 hover:text-slate-300 transition">
+              Política de Privacidad
+            </Link>
+            <span className="text-slate-700 text-xs">·</span>
+            <Link href="/terminos" className="text-xs text-slate-500 hover:text-slate-300 transition">
+              Términos y Condiciones
+            </Link>
+            <span className="text-slate-700 text-xs">·</span>
+            <Link href="/cookies" className="text-xs text-slate-500 hover:text-slate-300 transition">
+              Política de Cookies
+            </Link>
+            <span className="text-slate-700 text-xs">·</span>
+            <Link href="/faq" className="text-xs text-slate-500 hover:text-slate-300 transition">
+              Preguntas Frecuentes
+            </Link>
+          </div>
+
+          {/* Copyright + social + powered by */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-slate-500">
+              &copy; {new Date().getFullYear()} OdontoLatam. Todos los derechos reservados.
+            </p>
+
+            <div className="flex items-center gap-4">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  className="text-slate-500 hover:text-white transition"
+                  title={social.label}
+                >
+                  <span className="text-xs font-semibold">{social.label}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Powered by */}
+          <div className="flex justify-center pt-1">
+            <a
+              href="https://www.alfredoditullio.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[11px] text-slate-600 hover:text-slate-400 transition group"
+            >
+              <span className="material-symbols-outlined text-[14px] text-slate-600 group-hover:text-teal-400 transition">bolt</span>
+              Powered by{' '}
+              <span className="font-semibold text-slate-400 group-hover:text-teal-400 transition">
+                Alfredo Di Tullio
+              </span>
+              <span className="material-symbols-outlined text-[12px] opacity-50 group-hover:opacity-100 transition">open_in_new</span>
+            </a>
           </div>
         </div>
       </div>
