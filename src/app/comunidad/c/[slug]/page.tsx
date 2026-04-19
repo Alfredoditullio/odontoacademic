@@ -7,6 +7,8 @@ import { PostCard } from '@/components/comunidad/PostCard';
 import { ClinicalPostModal } from '@/components/comunidad/ClinicalPostModal';
 import { PresentationModal, type PresentationRecord } from '@/components/comunidad/PresentationModal';
 import { MarketModal } from '@/components/comunidad/MarketModal';
+import { SalaDeEsperaModal } from '@/components/comunidad/SalaDeEsperaModal';
+import { OFFICIAL_CREATORS } from '@/data/mock-community';
 
 const SIX_MONTHS_MS = 1000 * 60 * 60 * 24 * 30 * 6;
 const LS_KEY = 'ol_presentation';
@@ -30,6 +32,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   const [showClinicalModal, setShowClinicalModal] = useState(false);
   const [showPresentationModal, setShowPresentationModal] = useState(false);
   const [showMarketModal, setShowMarketModal] = useState(false);
+  const [showSalaModal, setShowSalaModal] = useState(false);
 
   // Presentation state (loaded from localStorage)
   const [presentation, setPresentation] = useState<PresentationRecord | null>(null);
@@ -61,6 +64,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   const isClinical       = slug === 'casos-clinicos';
   const isPresentation   = slug === 'presentaciones';
   const isMarket         = slug === 'mercado';
+  const isSala           = slug === 'sala-de-espera';
 
   // Presentation logic
   const alreadyPresented = !!presentation;
@@ -75,6 +79,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
       {showClinicalModal     && <ClinicalPostModal onClose={() => setShowClinicalModal(false)} />}
       {showPresentationModal && <PresentationModal onClose={() => setShowPresentationModal(false)} onPosted={handlePosted} />}
       {showMarketModal       && <MarketModal onClose={() => setShowMarketModal(false)} />}
+      {showSalaModal         && <SalaDeEsperaModal onClose={() => setShowSalaModal(false)} />}
 
       <div className="space-y-4">
 
@@ -101,6 +106,17 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                 <span className="material-symbols-outlined text-[18px]">add</span>
                 <span className="hidden sm:inline">Publicar caso</span>
                 <span className="sm:hidden">Publicar</span>
+              </button>
+            )}
+
+            {/* ── CTA: Sala de Espera ── */}
+            {isSala && (
+              <button
+                onClick={() => setShowSalaModal(true)}
+                className="shrink-0 inline-flex items-center gap-2 bg-white text-orange-600 font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-orange-50 transition shadow-sm"
+              >
+                <span className="text-base">😄</span>
+                <span className="hidden sm:inline">Publicar</span>
               </button>
             )}
 
@@ -200,6 +216,36 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                 </>
               )}
             </div>
+          </div>
+        )}
+
+        {/* Sala de Espera — Creadores Oficiales */}
+        {isSala && (
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-orange-200 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="material-symbols-outlined text-[18px] text-amber-500">verified</span>
+              <p className="text-xs font-black uppercase tracking-widest text-amber-700">Creadores Oficiales</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {OFFICIAL_CREATORS.map((c) => (
+                <div key={c.id} className="bg-white rounded-xl border border-orange-200 p-3 flex items-center gap-3">
+                  <div className={`size-10 rounded-xl bg-gradient-to-br ${c.color} flex items-center justify-center shrink-0`}>
+                    <span className="material-symbols-outlined text-white text-[20px]">groups</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-slate-900 truncate">{c.name}</p>
+                    <p className="text-xs text-slate-500">{c.followers} seguidores · {c.country}</p>
+                  </div>
+                  <span className="text-[10px] font-black bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full shrink-0 border border-amber-200">
+                    Oficial
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[11px] text-amber-700 mt-3">
+              ¿Tenés una página o cuenta con comunidad odontológica?{' '}
+              <a href="mailto:hola@odontolatam.com" className="font-bold underline">Escribinos para ser Creador Oficial.</a>
+            </p>
           </div>
         )}
 
