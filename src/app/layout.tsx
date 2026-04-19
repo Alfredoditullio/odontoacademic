@@ -10,8 +10,12 @@ export const metadata: Metadata = {
     template: '%s | OdontoLatam',
   },
   description:
-    'La comunidad de odontólogos más grande de Latinoamérica. Casos clínicos, bibliografía, atlas de patología oral, cursos, marketplace y networking profesional.',
-  keywords: ['odontología', 'comunidad dental', 'implantología', 'endodoncia', 'periodoncia', 'educación dental latina'],
+    'La comunidad de odontólogos más grande de Latinoamérica. Casos clínicos, bibliografía, atlas de patología oral, cursos, marketplace y networking profesional. Partner oficial de DentalCore, el mejor software dental para consultorios.',
+  keywords: [
+    'odontología', 'comunidad dental', 'implantología', 'endodoncia', 'periodoncia',
+    'software dental', 'DentalCore', 'gestión consultorio odontológico', 'historia clínica dental',
+    'software odontológico latinoamérica', 'educación dental continua',
+  ],
   openGraph: {
     type: 'website',
     locale: 'es_AR',

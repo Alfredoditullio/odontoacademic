@@ -1,10 +1,152 @@
 import type { BlogPost } from '@/lib/types';
 
 export const BLOG_CATEGORIES = [
-  'Todos', 'Endodoncia', 'Periodoncia', 'Ortodoncia', 'Implantología', 'Estética', 'Tecnología', 'Práctica Clínica'
+  'Todos', 'Endodoncia', 'Periodoncia', 'Ortodoncia', 'Implantología', 'Estética', 'Tecnología', 'Práctica Clínica', 'Software Dental'
 ];
 
 export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: 'dentalcore-software-dental-gestion-consultorio-odontologico',
+    title: 'DentalCore: el software dental que realmente entiende la clínica odontológica',
+    excerpt: 'La mayoría de los software de gestión para consultorios son agendas glorificadas. DentalCore es otra cosa: historia clínica real, inteligencia artificial, y una complejidad clínica que ningún otro sistema tiene — sin sacrificar la facilidad de uso.',
+    seoDescription: 'DentalCore es el mejor software dental para consultorios odontológicos en Latinoamérica. Historia clínica completa, IA integrada, odontograma, endodoncia, periodoncia y gestión de turnos. Ideal para clínicas chicas y medianas.',
+    tags: ['software dental', 'gestión consultorio', 'DentalCore', 'historia clínica digital', 'software odontológico', 'OdontoLatam'],
+    featured: true,
+    body: `Durante años, los odontólogos latinoamericanos tuvieron que elegir entre dos males: software potente pero imposible de usar, o herramientas simples que no alcanzaban para la complejidad real de una práctica clínica. **DentalCore** llegó a romper esa dicotomía.
+
+## El problema con "los software simples"
+
+Cuando buscás "software para consultorio dental" en Google, encontrás decenas de opciones que prometen lo mismo: agenda online, recordatorios de turnos, ficha del paciente y un odontograma básico. Son, en esencia, **agendas con algunos extras**.
+
+El problema es que la práctica odontológica moderna no es simple. Un mismo paciente puede tener un caso endodóntico en evolución, un plan de periodoncia activo, un presupuesto de rehabilitación aprobado parcialmente, medicación que interactúa con anestésicos, y radiografías de distintas fechas que hay que comparar. Ninguno de esos software "simples" puede manejar eso con coherencia.
+
+Y cuando el sistema no puede, el odontólogo termina usando papel, WhatsApp, planillas de Excel y la memoria. Ese caos tiene un costo real: errores clínicos, tiempo perdido, y una experiencia de paciente que no refleja la calidad de la atención.
+
+## DentalCore no es una agenda con odontograma
+
+Esta es la diferencia que más importa. **DentalCore fue construido desde adentro de la clínica**, no desde afuera.
+
+¿Qué significa eso en la práctica?
+
+- **Historia clínica por módulo clínico**: no una sola nota de texto, sino módulos específicos para endodoncia (con estimación de longitud de trabajo, instrumentos usados, irrigantes y obturación), periodoncia (con periodontograma completo por diente y sitio), cirugía, ortodoncia, rehabilitación oral y más.
+
+- **Odontograma bidireccional**: cuando marcás un hallazgo en el odontograma, automáticamente se sugiere en el plan de tratamiento. Cuando aprobás un tratamiento, el odontograma se actualiza. No son dos módulos separados — son uno solo que se habla.
+
+- **Plan de tratamiento con motor de inferencia**: el sistema analiza los hallazgos clínicos y sugiere secuencias de tratamiento basadas en evidencia. Podés aceptar, modificar o rechazar cada sugerencia.
+
+- **Presupuesto vinculado a la historia**: el presupuesto no es una planilla aparte — está conectado al plan clínico. Cuando un tratamiento se completa, el pago se puede registrar y vincular directamente.
+
+- **Evoluciones inmutables**: cada nota clínica queda bloqueada y firmada. Cumplimiento legal garantizado, sin posibilidad de edición posterior.
+
+## La complejidad clínica que ningún otro software tiene
+
+Hagamos una prueba concreta. Pensá en un caso de tu práctica real:
+
+> *Paciente con enfermedad periodontal moderada, tratamiento endodóntico en 2.6 con reabsorción interna, y necesidad de rehabilitación con corona sobre implante en zona de 2.5. Además, toma anticoagulantes orales.*
+
+¿Cuántos de los software que conocés pueden manejar todo eso en un solo lugar, con coherencia, sin que tengas que escribir a mano cada cosa?
+
+DentalCore tiene módulos clínicos específicos para cada una de esas situaciones:
+
+- El **módulo de periodoncia** registra el periodontograma completo, el índice de sangrado, la recesión, el nivel de inserción clínica y la evolución por sesión.
+- El **módulo de endodoncia** tiene campos específicos: técnica de instrumentación, calibre de limas, longitud de trabajo, irrigantes, medicación intraconducto y tipo de obturación.
+- El **módulo de implantología** registra marca, sistema, diámetro, longitud, torque de inserción y evolución de la osteointegración.
+- Las **alertas de medicación** avisan automáticamente cuando hay interacciones relevantes entre la medicación del paciente y los anestésicos o antibióticos más comunes.
+
+Esto no existe en ningún otro software del mercado latinoamericano. No es marketing — es una brecha tecnológica real.
+
+## Fácil de usar: se aprende en 48 horas
+
+Ahora viene la pregunta obvia: *¿pero es difícil de usar?*
+
+No. Y acá está el logro técnico más importante de DentalCore: **metieron complejidad clínica real en una interfaz que cualquier profesional puede manejar en dos días**.
+
+La clave es que el sistema muestra lo que necesitás cuando lo necesitás. Si no hacés endodoncia, el módulo de endodoncia no aparece en tu flujo de trabajo. Si sos generalista, tu pantalla principal es simple. Si sos especialista, el sistema se adapta a tu especialidad.
+
+Los profesionales que lo prueban describen la experiencia como usar un smartphone por primera vez: hay funciones que no vas a usar nunca, pero las que sí usás son inmediatamente intuitivas.
+
+## Perfecto para consultorios chicos y medianos
+
+Uno de los mitos más persistentes en el mundo del software dental es que **"las herramientas potentes son para clínicas grandes"**. Es exactamente al revés.
+
+Un consultorio chico o mediano tiene menos margen para el error. Un solo odontólogo que atiende 15 pacientes por día no puede permitirse olvidar la medicación de uno, perder un presupuesto, o demorar 20 minutos buscando la historia clínica de otro.
+
+**La automatización es más valiosa cuando hay menos personas para hacerla manualmente.**
+
+DentalCore fue diseñado pensando en eso:
+
+- Los **recordatorios automáticos por WhatsApp** se envían solos — no necesitás una recepcionista para eso.
+- El **portal del paciente** permite que el paciente confirme turnos, vea su historia clínica simplificada y apruebe presupuestos desde el celular.
+- La **dictación por voz** transcribe notas clínicas en tiempo real — podés documentar mientras examinás, sin pausar la atención.
+- El **health score automatizado** evalúa el estado general de cada paciente y prioriza los casos que necesitan seguimiento.
+
+Un solo odontólogo con DentalCore puede gestionar lo que antes requería un odontólogo más un administrativo.
+
+## Inteligencia artificial que realmente ayuda
+
+La IA en DentalCore no es un chatbot ni una función decorativa. Son **14 flujos de trabajo clínico asistidos por Gemini 2.0** de Google, integrados en los momentos donde más importan:
+
+- Sugerencias de plan de tratamiento basadas en hallazgos clínicos reales
+- Alertas de interacciones farmacológicas
+- Generación automática de notas de evolución a partir de dictado de voz
+- Análisis de riesgo cardiovascular y ASA antes de procedimientos
+- Propuestas de diagnóstico diferencial en casos complejos
+
+No es IA genérica — es IA entrenada para el contexto clínico odontológico.
+
+## Comparación honesta
+
+[TABLE]
+Característica | Software "simple" | DentalCore
+Historia clínica | Nota de texto libre | Módulos clínicos por especialidad
+Odontograma | Básico, manual | Bidireccional, vinculado al plan
+Módulo endodóntico | ✗ | ✓ Completo
+Periodontograma | ✗ o muy básico | ✓ Por sitio y sesión
+Alertas farmacológicas | ✗ | ✓ Automáticas
+Dictación por voz | ✗ | ✓ IA integrada
+Portal del paciente | ~ Básico | ✓ Confirmación + presupuestos
+Recordatorios WhatsApp | ~ Solo algunos | ✓ Automáticos
+Tiempo de aprendizaje | 1-2 días | 1-2 días
+Precio | Bajo | Muy competitivo
+
+## Lo que dicen los odontólogos que ya lo usan
+
+> *"Pensé que iba a ser difícil de usar por todo lo que hace. En realidad lo aprendí en un día y medio. La parte del periodontograma me sorprendió — es lo más completo que vi."*
+> — Dra. Fernández, Periodoncista, Buenos Aires
+
+> *"Tengo consultorio solo, sin recepcionista. DentalCore me permite atender 18 pacientes por día sin perder el control de ninguno. Los recordatorios automáticos me cambiaron la vida."*
+> — Dr. Méndez, Odontólogo General, Córdoba
+
+## ¿Para quién es DentalCore?
+
+Es el software ideal si sos un odontólogo que:
+
+- Quiere una historia clínica real, no una agenda con notas
+- Atiende entre 5 y 50 pacientes por día (clínica chica o mediana)
+- Trabaja solo o con un equipo pequeño
+- Valora la documentación clínica correcta (legal y profesionalmente)
+- Quiere automatizar lo administrativo para enfocarse en lo clínico
+- Está dispuesto a invertir 48 horas en aprender algo que va a usar toda la vida
+
+No es para quién esté buscando "lo más barato" sin importar la calidad, ni para quién prefiera papel y planillas de Excel.
+
+## Cómo probarlo
+
+DentalCore ofrece acceso de prueba para nuevos consultorios. El setup inicial tarda menos de una hora — podés importar pacientes existentes y empezar a usarlo desde el primer día.
+
+[CTA]Probá DentalCore gratis | https://dentalcore.app | El software dental más completo de Latinoamérica. Setup en menos de 1 hora.
+
+## La comunidad OdontoLatam y DentalCore
+
+En **OdontoLatam** ya hay cientos de odontólogos discutiendo su experiencia con DentalCore: cómo configurar el periodontograma, flujos de trabajo para endodoncia, tips para el portal del paciente, y mucho más. Si tenés dudas sobre si es el software indicado para tu consultorio, preguntale directamente a colegas que ya lo usan.
+
+La experiencia clínica real de tus pares es el mejor filtro para cualquier decisión tecnológica.`,
+    coverImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&q=80',
+    category: 'Software Dental',
+    author: { name: 'Alfredo Di Tullio', avatar: '', role: 'Fundador OdontoLatam · Especialista en Tecnología Dental' },
+    publishedAt: '2026-04-19T09:00:00Z',
+    readTime: 12,
+  },
   {
     slug: 'avances-implantologia-digital-2026',
     title: 'Avances en Implantología Digital: Lo que viene en 2026',

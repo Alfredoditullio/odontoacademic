@@ -185,6 +185,60 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ─── DENTALCORE FEATURED BANNER ─── */}
+      <section className="py-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center gap-8">
+            {/* Badge + copy */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 bg-sky-500/15 border border-sky-400/30 rounded-full px-4 py-1.5 text-xs font-bold text-sky-300 uppercase tracking-wider mb-4">
+                <span className="material-symbols-outlined text-[15px]">verified</span>
+                Software recomendado por OdontoLatam
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-snug">
+                ¿Usás un software dental que realmente entienda la clínica?
+              </h2>
+              <p className="text-slate-400 leading-relaxed max-w-2xl">
+                <strong className="text-slate-200">DentalCore</strong> es el único software dental de Latinoamérica con historia clínica por módulo clínico, odontograma bidireccional, IA integrada y periodontograma completo. No es una agenda — es una plataforma clínica real. Diseñado para consultorios chicos y medianos, se aprende en 48 horas.
+              </p>
+              <div className="flex flex-wrap gap-3 mt-5 justify-center lg:justify-start">
+                <a
+                  href="https://dentalcore.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-teal-500 text-white px-6 py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-lg shadow-sky-500/20"
+                >
+                  <span className="material-symbols-outlined text-[18px]">open_in_new</span>
+                  Conocer DentalCore
+                </a>
+                <a
+                  href="/blog/dentalcore-software-dental-gestion-consultorio-odontologico"
+                  className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-white/20 transition"
+                >
+                  <span className="material-symbols-outlined text-[18px]">article</span>
+                  Leer el análisis completo
+                </a>
+              </div>
+            </div>
+            {/* Feature pills */}
+            <div className="shrink-0 grid grid-cols-2 gap-2.5 w-full max-w-sm">
+              {[
+                { icon: 'stethoscope', label: 'Historia clínica real', sub: 'Módulos por especialidad' },
+                { icon: 'genetics', label: 'Odontograma IA', sub: 'Bidireccional y dinámico' },
+                { icon: 'psychology', label: 'IA Gemini 2.0', sub: '14 flujos clínicos' },
+                { icon: 'schedule', label: 'Setup en 1 hora', sub: 'Sin capacitación' },
+              ].map((f) => (
+                <div key={f.label} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition">
+                  <span className="material-symbols-outlined text-sky-400 text-[22px]">{f.icon}</span>
+                  <div className="text-white text-xs font-bold mt-1">{f.label}</div>
+                  <div className="text-slate-500 text-[10px] mt-0.5">{f.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── SPONSORS / BRANDS MARQUEE ─── */}
       <section className="py-10 bg-slate-50 border-b border-slate-100 overflow-hidden">
         <p className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">

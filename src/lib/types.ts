@@ -6,9 +6,12 @@ export interface BlogPost {
   body: string;
   coverImage: string;
   category: string;
+  tags?: string[];
+  seoDescription?: string;
   author: { name: string; avatar: string; role: string };
   publishedAt: string;
   readTime: number;
+  featured?: boolean;
 }
 
 // ─── Products (Tienda) ──────────────────────────────
