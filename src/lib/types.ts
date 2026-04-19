@@ -167,9 +167,13 @@ export interface CommunityEvent {
   author_id: string;
   title: string;
   description: string | null;
-  event_type: 'webinar' | 'congress' | 'course' | 'meetup' | 'workshop';
+  event_type: 'webinar' | 'congress' | 'course' | 'meetup' | 'workshop' | 'fair';
   event_url: string | null;
+  registration_url: string | null;
   location: string | null;
+  country: string | null;
+  region: 'Online' | 'LATAM' | 'España' | 'Europa' | 'Norteamérica' | 'Asia';
+  specialty: string | null;
   starts_at: string;
   ends_at: string | null;
   is_free: boolean;
