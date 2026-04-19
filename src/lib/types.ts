@@ -55,11 +55,18 @@ export interface VademecumItem {
 export interface AtlasItem {
   id: string;
   name: string;
+  latinName?: string;
   category: string;
   description: string;
   image: string;
+  epidemiology?: string;
+  etiology?: string;
   clinicalFeatures: string;
+  diagnosis?: string;
+  differentialDiagnosis?: string[];
   treatment: string;
+  prognosis?: string;
+  malignantPotential?: 'none' | 'low' | 'moderate' | 'high' | 'malignant';
 }
 
 export interface EducationItem {
