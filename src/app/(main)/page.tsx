@@ -339,16 +339,53 @@ export default function HomePage() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-500">comunidad completa</span>
             </h2>
             <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-              Casos clínicos, marketplace, directorio profesional, eventos, mensajería privada y mucho más. Todo en un solo lugar.
+              Casos clínicos, humor dental, sección de estudiantes, marketplace, mensajería privada, IA y mucho más.
             </p>
           </div>
 
-          {/* Bento grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Card 1 - Casos Clínicos (large) */}
+
+            {/* ── OdontoLatam Live — 3 col, teaser destacado ── */}
+            <div className="lg:col-span-3 group relative bg-gradient-to-r from-slate-900 via-rose-950 to-slate-900 rounded-2xl p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(239,68,68,0.15),_transparent_60%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(251,113,133,0.1),_transparent_60%)]" />
+              <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="size-14 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-lg shadow-rose-500/30 group-hover:scale-110 transition-transform">
+                      <span className="material-symbols-outlined text-white text-[32px]">live_tv</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <h3 className="text-2xl font-extrabold">OdontoLatam Live</h3>
+                        <span className="text-[10px] font-black bg-rose-500/30 text-rose-300 border border-rose-500/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider">Próximamente</span>
+                      </div>
+                      <p className="text-sm text-white/60">Streaming semanal para la comunidad dental de LATAM</p>
+                    </div>
+                  </div>
+                  <p className="text-white/75 leading-relaxed max-w-xl">
+                    Casos clínicos en vivo, debates, novedades de IA dental, mentoría abierta para estudiantes e invitados especiales de toda Latinoamérica. Todo en vivo, cada semana, con la comunidad participando en tiempo real.
+                  </p>
+                </div>
+                <div className="shrink-0 grid grid-cols-2 gap-2.5 w-full sm:w-auto">
+                  {[
+                    { icon: 'stethoscope', label: 'Clínica en vivo', color: 'text-emerald-400' },
+                    { icon: 'smart_toy', label: 'Tech & IA', color: 'text-violet-400' },
+                    { icon: 'school', label: 'Mentoría abierta', color: 'text-indigo-400' },
+                    { icon: 'forum', label: 'Debate semanal', color: 'text-amber-400' },
+                  ].map((f) => (
+                    <div key={f.label} className="bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-2.5 min-w-[160px]">
+                      <span className={`material-symbols-outlined text-[20px] ${f.color}`}>{f.icon}</span>
+                      <span className="text-xs font-semibold text-white/80">{f.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── Casos Clínicos — 2 col ── */}
             <div className="lg:col-span-2 group relative bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
               <div className="relative">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="size-12 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -360,66 +397,89 @@ export default function HomePage() {
                   </div>
                 </div>
                 <p className="text-white/80 leading-relaxed mb-6 max-w-lg">
-                  Publicá tus casos con imágenes, pedí segunda opinión, mostrá casos resueltos o abrí un debate clínico. Cada post se clasifica para encontrar exactamente lo que necesitás.
+                  Publicá tus casos, pedí segunda opinión a especialistas o abrí un debate. Si marcás tu caso como "Necesito ayuda" y elegís la especialidad, los especialistas registrados reciben una notificación directa.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {['Pido ayuda', 'Caso resuelto', 'Debate'].map((tag, i) => (
-                    <span key={tag} className={`text-xs font-bold px-3 py-1 rounded-full ${
-                      i === 0 ? 'bg-amber-400/20 text-amber-200' : i === 1 ? 'bg-emerald-400/20 text-emerald-200' : 'bg-indigo-400/20 text-indigo-200'
-                    }`}>{tag}</span>
+                  {[
+                    { label: 'Pido ayuda', color: 'bg-amber-400/20 text-amber-200' },
+                    { label: 'Caso resuelto', color: 'bg-emerald-400/20 text-emerald-200' },
+                    { label: 'Debate', color: 'bg-indigo-400/20 text-indigo-200' },
+                    { label: 'Notifica especialistas', color: 'bg-white/10 text-white/70' },
+                  ].map((tag) => (
+                    <span key={tag.label} className={`text-xs font-bold px-3 py-1 rounded-full ${tag.color}`}>{tag.label}</span>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Card 2 - Directorio */}
+            {/* ── Presentaciones ── */}
+            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+              <div className="size-11 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-white text-[24px]">waving_hand</span>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Presentaciones</h3>
+              <p className="text-sm text-slate-500 leading-relaxed mb-4">
+                Presentate a la comunidad con tu especialidad, país e intereses. Una vez cada 6 meses para que el feed no se sature.
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {['Implantólogo · ARG', 'Periodoncista · MX', 'Estudiante 4° · CL'].map((tag) => (
+                  <span key={tag} className="text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100 px-2.5 py-1 rounded-full">{tag}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Sala de Espera ── */}
+            <div className="group relative bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <div className="relative">
+                <div className="text-4xl mb-3">😄</div>
+                <h3 className="text-lg font-bold mb-2">Sala de Espera</h3>
+                <p className="text-sm text-white/80 leading-relaxed mb-4">
+                  Memes dentales, anécdotas del consultorio y encuestas divertidas. El recreo de OdontoLatam.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['Memes', 'Anécdotas', 'Encuestas'].map((t) => (
+                    <span key={t} className="text-[10px] font-bold bg-white/15 text-white px-2.5 py-1 rounded-full">{t}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── Carrera & Estudios ── */}
+            <div className="group relative bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-6 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+              <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-y-1/2 translate-x-1/2" />
+              <div className="relative">
+                <div className="size-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-[24px]">school</span>
+                </div>
+                <h3 className="text-lg font-bold mb-2">Carrera & Estudios</h3>
+                <p className="text-sm text-white/80 leading-relaxed mb-4">
+                  El espacio de los estudiantes de odonto de LATAM. Dudas, prácticas, facultades y mentoría de profesionales.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['Dudas académicas', 'Clínica', 'Debate'].map((t) => (
+                    <span key={t} className="text-[10px] font-bold bg-white/15 text-white px-2.5 py-1 rounded-full">{t}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── Directorio ── */}
             <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
               <div className="size-11 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-white text-[24px]">group</span>
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">Directorio Profesional</h3>
-              <p className="text-sm text-slate-500 leading-relaxed mb-4">Encontrá colegas por especialidad, país o ciudad. Ideal para derivaciones y networking.</p>
+              <p className="text-sm text-slate-500 leading-relaxed mb-4">Encontrá colegas por especialidad, país o ciudad. Seguílos, mandales un mensaje o pedí una derivación.</p>
               <div className="flex -space-x-2">
                 {['MR', 'LF', 'CM', 'AM'].map((init, i) => (
-                  <div key={i} className="size-8 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 border-2 border-white flex items-center justify-center text-white text-[10px] font-bold">
-                    {init}
-                  </div>
+                  <div key={i} className="size-8 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 border-2 border-white flex items-center justify-center text-white text-[10px] font-bold">{init}</div>
                 ))}
-                <div className="size-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-slate-400 text-[10px] font-bold">
-                  +5k
-                </div>
+                <div className="size-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-slate-400 text-[10px] font-bold">+5k</div>
               </div>
             </div>
 
-            {/* Card 3 - Marketplace */}
-            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
-              <div className="size-11 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-white text-[24px]">storefront</span>
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Mercado</h3>
-              <p className="text-sm text-slate-500 leading-relaxed mb-3">Comprá, vendé o permutá instrumental y materiales entre colegas verificados.</p>
-              <div className="flex gap-2">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Vendo</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Compro</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Permuto</span>
-              </div>
-            </div>
-
-            {/* Card 4 - Eventos */}
-            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
-              <div className="size-11 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-white text-[24px]">event</span>
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Eventos</h3>
-              <p className="text-sm text-slate-500 leading-relaxed mb-3">Webinars, congresos, cursos, talleres y meetups organizados por la comunidad.</p>
-              <div className="flex gap-2">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Webinars</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Congresos</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">Talleres</span>
-              </div>
-            </div>
-
-            {/* Card 5 - Mensajería (wide) */}
+            {/* ── Mensajería — 2 col ── */}
             <div className="lg:col-span-2 group relative bg-gradient-to-br from-sky-600 to-blue-700 rounded-2xl p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
               <div className="relative flex flex-col sm:flex-row items-start gap-6">
@@ -434,18 +494,16 @@ export default function HomePage() {
                     </div>
                   </div>
                   <p className="text-white/80 leading-relaxed">
-                    Enviá mensajes privados a cualquier profesional del directorio. Consultá casos, coordiná derivaciones o simplemente hacé networking.
+                    Enviá mensajes privados a cualquier profesional. Consultá casos, coordiná derivaciones o simplemente hacé networking entre países.
                   </p>
                 </div>
                 <div className="shrink-0 flex flex-col gap-2 w-full sm:w-auto">
                   {[
-                    { name: 'Dra. Fernández', msg: 'Excelente caso, te consulto...', time: '2min' },
-                    { name: 'Dr. Méndez', msg: 'Gracias por el dato del paper', time: '1h' },
+                    { init: 'LF', name: 'Dra. Fernández', msg: 'Excelente caso, te consulto...', time: '2min' },
+                    { init: 'CM', name: 'Dr. Méndez', msg: 'Gracias por el dato del paper', time: '1h' },
                   ].map((c) => (
                     <div key={c.name} className="bg-white/10 backdrop-blur rounded-xl px-4 py-3 flex items-center gap-3 min-w-[240px]">
-                      <div className="size-8 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold shrink-0">
-                        {c.name.split(' ').map(w => w[0]).join('').slice(0,2)}
-                      </div>
+                      <div className="size-8 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold shrink-0">{c.init}</div>
                       <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold">{c.name}</div>
                         <div className="text-[11px] text-white/60 truncate">{c.msg}</div>
@@ -457,20 +515,78 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Card 6 - Encuestas & Polls */}
+            {/* ── Mercado ── */}
+            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+              <div className="size-11 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-white text-[24px]">storefront</span>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Mercado</h3>
+              <p className="text-sm text-slate-500 leading-relaxed mb-3">Comprá, vendé o permutá instrumental y materiales entre colegas de toda Latinoamérica.</p>
+              <div className="flex gap-2">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Vendo</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Compro</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Permuto</span>
+              </div>
+            </div>
+
+            {/* ── IA y Tecnología ── */}
+            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+              <div className="size-11 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-white text-[24px]">smart_toy</span>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">IA y Tecnología</h3>
+              <p className="text-sm text-slate-500 leading-relaxed mb-3">Análisis radiográfico con IA, diseño de sonrisa digital, software dental y todo lo que viene cambiando la profesión.</p>
+              <div className="flex flex-col gap-1.5">
+                {[
+                  { icon: 'radiology', label: 'IA radiográfica', color: '#7c3aed' },
+                  { icon: 'face', label: 'Smile design', color: '#8b5cf6' },
+                  { icon: 'devices', label: 'Software dental', color: '#a78bfa' },
+                ].map((r) => (
+                  <div key={r.label} className="flex items-center gap-2 text-xs text-slate-600">
+                    <span className="material-symbols-outlined text-[15px]" style={{ color: r.color }}>{r.icon}</span>
+                    <span className="font-medium">{r.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Marketing Dental ── */}
+            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+              <div className="size-11 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-white text-[24px]">campaign</span>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Marketing Dental</h3>
+              <p className="text-sm text-slate-500 leading-relaxed mb-3">Estrategias reales de colegas: Google Maps, Instagram, referidos y cómo crecer sin gastar en publicidad.</p>
+              <div className="flex flex-wrap gap-1.5">
+                {['Google Maps', 'Instagram', 'Referidos'].map((tag) => (
+                  <span key={tag} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100">{tag}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Eventos ── */}
+            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+              <div className="size-11 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-white text-[24px]">event</span>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Eventos</h3>
+              <p className="text-sm text-slate-500 leading-relaxed mb-3">Webinars, congresos, cursos y talleres organizados por y para la comunidad. Muchos son gratuitos.</p>
+              <div className="flex gap-2 flex-wrap">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Webinars</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Congresos</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Gratis</span>
+              </div>
+            </div>
+
+            {/* ── Encuestas ── */}
             <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
               <div className="size-11 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-white text-[24px]">ballot</span>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Encuestas</h3>
-              <p className="text-sm text-slate-500 leading-relaxed mb-3">Creá encuestas en tus posts para conocer la opinión de la comunidad sobre temas clínicos.</p>
-              {/* Mini poll mockup */}
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Encuestas en posts</h3>
+              <p className="text-sm text-slate-500 leading-relaxed mb-3">Agregá una encuesta a cualquier post y conocé la opinión de la comunidad sobre temas clínicos o del consultorio.</p>
               <div className="space-y-1.5">
-                {[
-                  { label: 'EMD + xenoinjerto', pct: 45 },
-                  { label: 'rh-PDGF + aloinjerto', pct: 30 },
-                  { label: 'RTG con membrana', pct: 25 },
-                ].map((o) => (
+                {[{ label: 'Boca a boca', pct: 55 }, { label: 'Instagram', pct: 29 }, { label: 'Google', pct: 16 }].map((o) => (
                   <div key={o.label} className="relative rounded-lg border border-slate-200 px-3 py-1.5 overflow-hidden">
                     <div className="absolute inset-0 bg-indigo-50 rounded-lg" style={{ width: `${o.pct}%` }} />
                     <div className="relative flex justify-between text-[11px]">
@@ -479,51 +595,9 @@ export default function HomePage() {
                     </div>
                   </div>
                 ))}
-                <p className="text-[10px] text-slate-400 mt-1">127 votos</p>
               </div>
             </div>
 
-            {/* Card 7 - Recursos integrados */}
-            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
-              <div className="size-11 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-white text-[24px]">library_books</span>
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Recursos Integrados</h3>
-              <p className="text-sm text-slate-500 leading-relaxed mb-3">Vademécum, atlas de patología oral y glosario dental accesibles desde la comunidad.</p>
-              <div className="flex flex-col gap-1.5">
-                {[
-                  { icon: 'pill', label: 'Vademécum', color: '#dc2626' },
-                  { icon: 'biotech', label: 'Atlas de patología', color: '#ea580c' },
-                  { icon: 'menu_book', label: 'Glosario dental', color: '#0d9488' },
-                ].map((r) => (
-                  <div key={r.label} className="flex items-center gap-2 text-xs text-slate-600">
-                    <span className="material-symbols-outlined text-[16px]" style={{ color: r.color }}>{r.icon}</span>
-                    <span className="font-medium">{r.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Card 8 - Reputación & Badges */}
-            <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
-              <div className="size-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-white text-[24px]">military_tech</span>
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Reputación & Badges</h3>
-              <p className="text-sm text-slate-500 leading-relaxed mb-3">Ganá puntos de reputación, desbloqueá insignias y destacate en el directorio profesional.</p>
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  { icon: 'star', name: 'Top Contributor', color: '#f59e0b' },
-                  { icon: 'verified', name: 'Verificado', color: '#0284c7' },
-                  { icon: 'favorite', name: 'Mentor', color: '#e11d48' },
-                ].map((b) => (
-                  <span key={b.name} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ backgroundColor: b.color + '15', color: b.color }}>
-                    <span className="material-symbols-outlined text-[12px]">{b.icon}</span>
-                    {b.name}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* CTA */}
