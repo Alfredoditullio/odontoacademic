@@ -19,7 +19,7 @@ const FOOTER_LINKS = {
     { href: '/comunidad', label: 'Feed' },
     { href: '/comunidad/directorio', label: 'Directorio' },
     { href: '/comunidad/eventos', label: 'Eventos' },
-    { href: '/comunidad', label: 'Unirse' },
+    { href: '/comunidad/mensajes', label: 'Mensajes' },
   ],
 };
 
