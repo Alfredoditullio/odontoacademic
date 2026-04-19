@@ -45,7 +45,7 @@ export default function MensajesPage() {
         {MOCK_CONVERSATIONS.map((conv) => (
           <Link
             key={conv.other.user_id}
-            href={`/comunidad/u/${conv.other.handle}`}
+            href={`/comunidad/mensajes/${conv.other.handle}`}
             className={`flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition ${conv.unread > 0 ? 'bg-primary/5' : ''}`}
           >
             <div className="size-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0">

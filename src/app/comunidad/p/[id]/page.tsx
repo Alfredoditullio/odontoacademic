@@ -1,11 +1,23 @@
+'use client';
+
+import { useState, use } from 'react';
 import Link from 'next/link';
 import { MOCK_POSTS, MOCK_COMMENTS } from '@/data/mock-community';
 import { timeAgo, initials } from '@/lib/utils';
-import type { MarketMeta } from '@/lib/types';
+import type { MarketMeta, CommentWithAuthor } from '@/lib/types';
 
-export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+const ME = { user_id: 'me', handle: 'dr-rodriguez', display_name: 'Dr. Martín Rodríguez', role: 'member' as const };
+
+export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const post = MOCK_POSTS.find((p) => p.id === id);
+
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(post?.like_count ?? 0);
+  const [commentText, setCommentText] = useState('');
+  const [localComments, setLocalComments] = useState<CommentWithAuthor[]>(
+    post ? MOCK_COMMENTS.filter((c) => c.post_id === id) : []
+  );
 
   if (!post) {
     return (
@@ -16,7 +28,33 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
     );
   }
 
-  const comments = MOCK_COMMENTS.filter((c) => c.post_id === id);
+  function handleLike() {
+    setLiked((prev) => !prev);
+    setLikeCount((prev) => liked ? prev - 1 : prev + 1);
+  }
+
+  function handleComment() {
+    const text = commentText.trim();
+    if (!text) return;
+    const newComment: CommentWithAuthor = {
+      id: `c-local-${Date.now()}`,
+      post_id: id,
+      author_id: ME.user_id,
+      body: text,
+      is_deleted: false,
+      created_at: new Date().toISOString(),
+      author: {
+        ...ME,
+        avatar_url: null, bio: null, specialty: null, country: 'Argentina',
+        city: null, phone: null, website: null, accepts_referrals: false,
+        reputation_points: 450, follower_count: 128, following_count: 45,
+        rules_accepted_at: new Date().toISOString(),
+        created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+      },
+    };
+    setLocalComments((prev) => [...prev, newComment]);
+    setCommentText('');
+  }
 
   return (
     <div className="space-y-4">
@@ -32,7 +70,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
             <Link href={`/comunidad/u/${post.author.handle}`} className="font-semibold text-slate-900 hover:underline">
               {post.author.display_name}
             </Link>
-            <div className="flex items-center gap-2 text-xs text-slate-500">
+            <div className="flex items-center gap-2 text-xs text-slate-500 flex-wrap">
               {post.author.specialty && <span>{post.author.specialty}</span>}
               {post.author.country && <span>· {post.author.country}</span>}
               <span>·</span>
@@ -84,16 +122,26 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
           );
         })()}
 
-        <div className="prose-post text-slate-700">{post.body}</div>
+        <div className="prose-post text-slate-700 whitespace-pre-wrap leading-relaxed">{post.body}</div>
 
         <footer className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-4">
-          <button className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-rose-600 transition">
-            <span className="material-symbols-outlined text-[20px]">favorite</span>
-            {post.like_count}
+          <button
+            onClick={handleLike}
+            className={`inline-flex items-center gap-1.5 text-sm font-semibold transition ${
+              liked ? 'text-rose-500' : 'text-slate-500 hover:text-rose-500'
+            }`}
+          >
+            <span
+              className="material-symbols-outlined text-[20px]"
+              style={{ fontVariationSettings: liked ? "'FILL' 1" : "'FILL' 0" }}
+            >
+              favorite
+            </span>
+            {likeCount}
           </button>
           <span className="inline-flex items-center gap-1.5 text-sm text-slate-500">
             <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-            {post.comment_count} comentarios
+            {localComments.length} comentarios
           </span>
         </footer>
       </article>
@@ -102,38 +150,56 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
       <section className="bg-white rounded-xl border border-slate-200 p-6">
         <h2 className="font-bold text-slate-900 mb-4">Comentarios</h2>
 
-        {/* Comment form placeholder */}
-        <textarea
-          placeholder="Escribí un comentario..."
-          rows={3}
-          className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y mb-2"
-        />
-        <div className="flex justify-end mb-4">
-          <button className="bg-primary text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-primary/90 transition">
-            Comentar
-          </button>
+        {/* Comment form */}
+        <div className="flex gap-3 mb-6">
+          <div className="size-9 rounded-full bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center font-bold text-white text-xs shrink-0">
+            MR
+          </div>
+          <div className="flex-1">
+            <textarea
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleComment(); }}
+              placeholder="Escribí un comentario... (Cmd+Enter para enviar)"
+              rows={3}
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none placeholder:text-slate-300"
+            />
+            <div className="flex justify-end mt-2">
+              <button
+                onClick={handleComment}
+                disabled={!commentText.trim()}
+                className="inline-flex items-center gap-1.5 bg-primary text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-primary/90 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <span className="material-symbols-outlined text-[16px]">send</span>
+                Comentar
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-4 mt-6">
-          {comments.length === 0 ? (
+        <div className="space-y-4">
+          {localComments.length === 0 ? (
             <p className="text-sm text-slate-400 text-center py-4">Todavía no hay comentarios. Sé el primero.</p>
           ) : (
-            comments.map((c) => (
+            localComments.map((c) => (
               <div key={c.id} className="flex gap-3">
                 <Link
                   href={`/comunidad/u/${c.author.handle}`}
-                  className="size-9 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600 text-xs flex-shrink-0"
+                  className="size-9 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600 text-xs flex-shrink-0 hover:bg-slate-300 transition"
                 >
                   {initials(c.author.display_name)}
                 </Link>
-                <div className="flex-1 min-w-0 bg-slate-50 rounded-lg px-3 py-2">
-                  <div className="flex items-center gap-2 text-xs">
-                    <Link href={`/comunidad/u/${c.author.handle}`} className="font-semibold text-slate-900 hover:underline">
+                <div className="flex-1 min-w-0 bg-slate-50 rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-2 text-xs mb-1">
+                    <Link href={`/comunidad/u/${c.author.handle}`} className="font-bold text-slate-900 hover:underline">
                       {c.author.display_name}
                     </Link>
+                    {c.author.specialty && (
+                      <span className="text-slate-400">· {c.author.specialty}</span>
+                    )}
                     <span className="text-slate-400">{timeAgo(c.created_at)}</span>
                   </div>
-                  <p className="text-sm text-slate-700 whitespace-pre-wrap mt-1">{c.body}</p>
+                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{c.body}</p>
                 </div>
               </div>
             ))
@@ -141,7 +207,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
         </div>
       </section>
 
-      <div className="text-center">
+      <div className="text-center pb-4">
         <Link href="/comunidad" className="text-sm text-primary font-semibold hover:underline">
           ← Volver al feed
         </Link>

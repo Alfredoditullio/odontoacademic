@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import type { PostWithAuthor } from '@/lib/types';
 import { timeAgo, initials } from '@/lib/utils';
@@ -68,6 +71,16 @@ function RoleBadge({ role, studyYear }: { role: string; studyYear?: number | nul
 }
 
 export function PostCard({ post }: { post: PostWithAuthor }) {
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.like_count);
+
+  function handleLike(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setLiked((prev) => !prev);
+    setLikeCount((prev) => liked ? prev - 1 : prev + 1);
+  }
+
   const typeBadge = post.post_type ? POST_TYPE_BADGE[post.post_type] : null;
   const isSalaDeEspera = post.category.slug === 'sala-de-espera';
   const isCarrera = post.category.slug === 'carrera-estudios';
@@ -130,10 +143,10 @@ export function PostCard({ post }: { post: PostWithAuthor }) {
 
         {/* Likes grandes para sala de espera */}
         {isSalaDeEspera && (
-          <div className="shrink-0 flex flex-col items-center text-orange-400">
-            <span className="material-symbols-outlined text-[22px]">favorite</span>
-            <span className="text-xs font-black">{post.like_count}</span>
-          </div>
+          <button onClick={handleLike} className={`shrink-0 flex flex-col items-center transition ${liked ? 'text-rose-500' : 'text-orange-400 hover:text-rose-400'}`}>
+            <span className={`material-symbols-outlined text-[22px] ${liked ? 'filled' : ''}`} style={{ fontVariationSettings: liked ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+            <span className="text-xs font-black">{likeCount}</span>
+          </button>
         )}
       </header>
 
@@ -166,10 +179,10 @@ export function PostCard({ post }: { post: PostWithAuthor }) {
         isSalaDeEspera ? 'border-orange-100' : 'border-slate-100'
       }`}>
         {!isSalaDeEspera && (
-          <span className="inline-flex items-center gap-1">
-            <span className="material-symbols-outlined text-[18px]">favorite</span>
-            {post.like_count}
-          </span>
+          <button onClick={handleLike} className={`inline-flex items-center gap-1 transition font-semibold ${liked ? 'text-rose-500' : 'hover:text-rose-500'}`}>
+            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: liked ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+            {likeCount}
+          </button>
         )}
         <Link href={`/comunidad/p/${post.id}`} className="inline-flex items-center gap-1 hover:text-primary transition">
           <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
