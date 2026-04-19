@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { BLOG_POSTS } from '@/data/mock-blog';
 
 const FEATURES = [
-  { icon: 'menu_book', title: 'Bibliografía', desc: 'Artículos científicos y revisiones sistemáticas actualizadas.', href: '/recursos/bibliografia', color: 'from-blue-500 to-indigo-500' },
+  { icon: 'medication', title: 'Vademécum', desc: 'Medicamentos de uso dental con dosis, contraindicaciones e interacciones.', href: '/recursos/vademecum', color: 'from-emerald-500 to-teal-600' },
   { icon: 'biotech', title: 'Atlas de Patología', desc: 'Atlas completo de patología oral con imágenes clínicas.', href: '/recursos/atlas', color: 'from-rose-500 to-pink-500' },
   { icon: 'school', title: 'Educación Continua', desc: 'Diplomados, cursos, talleres y webinars con certificación.', href: '/recursos/educacion', color: 'from-emerald-500 to-teal-500' },
   { icon: 'groups', title: 'Comunidad', desc: 'Red de odontólogos de Latinoamérica para compartir y aprender.', href: '/comunidad', color: 'from-sky-500 to-cyan-500' },

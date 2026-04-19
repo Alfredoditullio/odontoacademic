@@ -35,15 +35,21 @@ export interface CartItem {
 }
 
 // ─── Resources ──────────────────────────────────────
-export interface BibliographyItem {
+export interface VademecumItem {
   id: string;
-  title: string;
-  authors: string;
-  journal: string;
-  year: number;
-  doi: string;
-  abstract: string;
+  name: string;
+  genericName: string;
   category: string;
+  indications: string[];
+  dose: {
+    adult: string;
+    pediatric?: string;
+  };
+  presentations: string[];
+  contraindications: string[];
+  interactions: string[];
+  notes?: string;
+  alertLevel?: 'normal' | 'caution' | 'warning';
 }
 
 export interface AtlasItem {

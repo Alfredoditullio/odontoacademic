@@ -11,7 +11,7 @@ const NAV_LINKS = [
     href: '/recursos',
     label: 'Recursos',
     children: [
-      { href: '/recursos/bibliografia', label: 'Bibliografía', icon: 'menu_book' },
+      { href: '/recursos/vademecum', label: 'Vademécum', icon: 'medication' },
       { href: '/recursos/atlas', label: 'Atlas', icon: 'biotech' },
       { href: '/recursos/educacion', label: 'Educación', icon: 'school' },
     ],

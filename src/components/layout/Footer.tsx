@@ -10,7 +10,7 @@ const FOOTER_LINKS = {
     { href: '/tienda', label: 'Tienda' },
   ],
   'Recursos': [
-    { href: '/recursos/bibliografia', label: 'Bibliografía' },
+    { href: '/recursos/vademecum', label: 'Vademécum' },
     { href: '/recursos/atlas', label: 'Atlas de Patología Oral' },
     { href: '/recursos/educacion', label: 'Educación Continua' },
   ],

@@ -10,7 +10,7 @@ const COMMUNITY_LINKS = [
 ];
 
 const RESOURCE_LINKS = [
-  { href: '/recursos/bibliografia', icon: 'menu_book', color: '#dc2626', label: 'Bibliografía' },
+  { href: '/recursos/vademecum', icon: 'medication', color: '#059669', label: 'Vademécum' },
   { href: '/recursos/atlas', icon: 'biotech', color: '#ea580c', label: 'Atlas de patología oral' },
   { href: '/recursos/educacion', icon: 'school', color: '#0d9488', label: 'Educación continua' },
 ];

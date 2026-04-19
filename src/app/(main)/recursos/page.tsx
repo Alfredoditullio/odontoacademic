@@ -5,12 +5,12 @@ export const metadata: Metadata = { title: 'Recursos' };
 
 const SECTIONS = [
   {
-    href: '/recursos/bibliografia',
-    icon: 'menu_book',
-    color: 'from-blue-500 to-indigo-500',
-    title: 'Bibliografía',
-    desc: 'Accedé a artículos científicos, revisiones sistemáticas y meta-análisis actualizados de las principales revistas de odontología.',
-    count: '500+ artículos',
+    href: '/recursos/vademecum',
+    icon: 'medication',
+    color: 'from-emerald-500 to-teal-600',
+    title: 'Vademécum Odontológico',
+    desc: 'Medicamentos de uso frecuente en odontología: dosis, presentaciones, contraindicaciones e interacciones farmacológicas.',
+    count: '19 medicamentos',
   },
   {
     href: '/recursos/atlas',
