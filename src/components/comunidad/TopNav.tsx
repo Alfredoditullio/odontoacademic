@@ -47,14 +47,6 @@ export function CommunityTopNav() {
             </span>
           </Link>
 
-          <Link
-            href="/comunidad/new"
-            className="inline-flex items-center gap-1.5 bg-white text-sky-700 px-4 py-2 rounded-xl text-sm font-bold hover:bg-sky-50 shadow-sm transition"
-          >
-            <span className="material-symbols-outlined text-[18px]">add</span>
-            <span className="hidden sm:inline">Nuevo post</span>
-          </Link>
-
           <div className="size-10 rounded-full bg-white/15 backdrop-blur ring-2 ring-white/30 flex items-center justify-center font-bold text-white text-sm">
             MR
           </div>
