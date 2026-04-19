@@ -42,7 +42,7 @@ export function CommunityTopNav() {
 
   return (
     <header className="sticky top-0 z-30 bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center gap-4">
+      <div className="w-full px-5 h-20 flex items-center gap-4">
         <Link href="/comunidad" className="flex items-center gap-3 text-white group">
           <div className="size-12 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center ring-1 ring-white/20 group-hover:bg-white/25 transition">
             <span className="material-symbols-outlined text-[28px]">groups</span>
