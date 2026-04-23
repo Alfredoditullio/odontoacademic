@@ -35,7 +35,7 @@ export default function HomePage() {
             alt=""
             className="size-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-slate-900/90 via-slate-900/70 to-slate-900/50 sm:from-slate-900/95 sm:via-slate-900/80 sm:to-slate-900/40" />
         </div>
 
         {/* Floating particles */}
@@ -46,7 +46,7 @@ export default function HomePage() {
           <div className="absolute top-1/3 right-1/3 size-2 rounded-full bg-amber-400/20 animate-float" style={{ animationDelay: '0.5s' }} />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 flex items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 flex items-center">
           <div className="flex-1 max-w-2xl">
             {/* Badge */}
             <div className="animate-fade-in-up inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 text-sm text-white/90 font-medium mb-8">
@@ -69,17 +69,17 @@ export default function HomePage() {
             </p>
 
             {/* CTAs */}
-            <div className="animate-fade-in-up flex flex-wrap gap-4" style={{ animationDelay: '0.45s' }}>
+            <div className="animate-fade-in-up flex flex-col sm:flex-row gap-3" style={{ animationDelay: '0.45s' }}>
               <Link
                 href="/comunidad"
-                className="group inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-teal-500 text-white px-8 py-4 rounded-xl text-base font-bold shadow-lg shadow-sky-500/25 hover:shadow-xl hover:shadow-sky-500/30 transition-all hover:-translate-y-0.5"
+                className="group inline-flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start bg-gradient-to-r from-sky-500 to-teal-500 text-white px-8 py-4 rounded-xl text-base font-bold shadow-lg shadow-sky-500/25 hover:shadow-xl hover:shadow-sky-500/30 transition-all hover:-translate-y-0.5"
               >
                 Unirme a la Comunidad
                 <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
               </Link>
               <Link
                 href="/recursos"
-                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl text-base font-bold hover:bg-white/20 border border-white/20 transition-all"
+                className="inline-flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl text-base font-bold hover:bg-white/20 border border-white/20 transition-all"
               >
                 <span className="material-symbols-outlined text-[20px]">explore</span>
                 Explorar Recursos
@@ -87,7 +87,7 @@ export default function HomePage() {
             </div>
 
             {/* Social proof mini */}
-            <div className="animate-fade-in-up mt-10 flex items-center gap-4" style={{ animationDelay: '0.6s' }}>
+            <div className="animate-fade-in-up mt-8 sm:mt-10 flex items-center gap-3" style={{ animationDelay: '0.6s' }}>
               <div className="flex -space-x-3">
                 {['MR', 'LF', 'CM', 'AM', 'RA'].map((initials, i) => (
                   <div key={i} className="size-10 rounded-full bg-gradient-to-br from-sky-500 to-teal-500 border-2 border-slate-900 flex items-center justify-center text-white text-xs font-bold">
@@ -158,7 +158,7 @@ export default function HomePage() {
       {/* ─── STATS BAR ─── */}
       <section className="bg-white border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {STATS.map((stat, i) => (
               <div key={stat.label} className="text-center animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
                 <div className="size-10 mx-auto rounded-xl bg-primary/10 flex items-center justify-center mb-2">
@@ -254,7 +254,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
             {/* ── OdontoLatam Live — 3 col, teaser destacado ── */}
-            <div className="lg:col-span-3 group relative bg-gradient-to-r from-slate-900 via-rose-950 to-slate-900 rounded-2xl p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+            <div className="lg:col-span-3 group relative bg-gradient-to-r from-slate-900 via-rose-950 to-slate-900 rounded-2xl p-5 sm:p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(239,68,68,0.15),_transparent_60%)]" />
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(251,113,133,0.1),_transparent_60%)]" />
               <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -282,7 +282,7 @@ export default function HomePage() {
                     { icon: 'school', label: 'Mentoría abierta', color: 'text-indigo-400' },
                     { icon: 'forum', label: 'Debate semanal', color: 'text-amber-400' },
                   ].map((f) => (
-                    <div key={f.label} className="bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-2.5 min-w-[160px]">
+                    <div key={f.label} className="bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-2.5">
                       <span className={`material-symbols-outlined text-[20px] ${f.color}`}>{f.icon}</span>
                       <span className="text-xs font-semibold text-white/80">{f.label}</span>
                     </div>
@@ -292,7 +292,7 @@ export default function HomePage() {
             </div>
 
             {/* ── Casos Clínicos — 2 col ── */}
-            <div className="lg:col-span-2 group relative bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+            <div className="lg:col-span-2 group relative bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-5 sm:p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
               <div className="relative">
                 <div className="flex items-center gap-3 mb-4">
@@ -388,7 +388,7 @@ export default function HomePage() {
             </div>
 
             {/* ── Mensajería — 2 col ── */}
-            <div className="lg:col-span-2 group relative bg-gradient-to-br from-sky-600 to-blue-700 rounded-2xl p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+            <div className="lg:col-span-2 group relative bg-gradient-to-br from-sky-600 to-blue-700 rounded-2xl p-5 sm:p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
               <div className="relative flex flex-col sm:flex-row items-start gap-6">
                 <div className="flex-1">
@@ -410,7 +410,7 @@ export default function HomePage() {
                     { init: 'LF', name: 'Dra. Fernández', msg: 'Excelente caso, te consulto...', time: '2min' },
                     { init: 'CM', name: 'Dr. Méndez', msg: 'Gracias por el dato del paper', time: '1h' },
                   ].map((c) => (
-                    <div key={c.name} className="bg-white/10 backdrop-blur rounded-xl px-4 py-3 flex items-center gap-3 min-w-[240px]">
+                    <div key={c.name} className="bg-white/10 backdrop-blur rounded-xl px-4 py-3 flex items-center gap-3">
                       <div className="size-8 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold shrink-0">{c.init}</div>
                       <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold">{c.name}</div>
@@ -489,7 +489,7 @@ export default function HomePage() {
             {/* ── Bolsa de Trabajo — col-span-2 para completar la última fila junto a Encuestas ── */}
             <Link
               href="/comunidad/trabajo"
-              className="group lg:col-span-2 relative bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 block"
+              className="group lg:col-span-2 relative bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-5 sm:p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 block"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
               <div className="relative flex flex-col sm:flex-row items-start gap-6">
@@ -579,7 +579,7 @@ export default function HomePage() {
       {/* ─── LATEST BLOG ─── */}
       <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-10">
             <div>
               <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Últimos artículos</h2>
               <p className="text-slate-500">Las noticias y tendencias más relevantes del mundo dental.</p>
@@ -638,7 +638,7 @@ export default function HomePage() {
       {/* ─── CTA ─── */}
       <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-10 sm:p-16 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl sm:rounded-3xl p-6 sm:p-10 lg:p-16 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-sky-500/20 to-transparent rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-teal-500/20 to-transparent rounded-full blur-3xl" />
             <div className="relative flex flex-col lg:flex-row items-center gap-10">

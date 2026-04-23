@@ -68,7 +68,7 @@ export function TestimonialsCarousel() {
 
   return (
     <section
-      className="py-12 overflow-hidden relative"
+      className="py-12 overflow-x-hidden relative"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -94,13 +94,13 @@ export function TestimonialsCarousel() {
           {/* Prev / Next arrows */}
           <button
             onClick={prev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 sm:-translate-x-10 z-10 size-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-500 hover:text-slate-900 hover:shadow-lg transition-all"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 size-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-500 hover:text-slate-900 hover:shadow-lg transition-all"
           >
             <span className="material-symbols-outlined text-[18px]">chevron_left</span>
           </button>
           <button
             onClick={next}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 sm:translate-x-10 z-10 size-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-500 hover:text-slate-900 hover:shadow-lg transition-all"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 size-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-500 hover:text-slate-900 hover:shadow-lg transition-all"
           >
             <span className="material-symbols-outlined text-[18px]">chevron_right</span>
           </button>

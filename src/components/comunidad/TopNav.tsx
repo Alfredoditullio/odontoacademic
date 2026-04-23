@@ -42,19 +42,14 @@ export function CommunityTopNav() {
 
   return (
     <header className="sticky top-0 z-30 bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600 shadow-sm">
-      <div className="w-full px-5 h-20 flex items-center gap-4">
-        <Link href="/comunidad" className="flex items-center gap-3 text-white group">
+      <div className="w-full max-w-full px-4 sm:px-5 h-20 flex items-center gap-3 overflow-hidden">
+        <Link href="/comunidad" className="flex items-center gap-3 text-white group min-w-0">
           <div className="size-12 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center ring-1 ring-white/20 group-hover:bg-white/25 transition">
             <span className="material-symbols-outlined text-[28px]">groups</span>
           </div>
-          <div className="leading-tight">
-            <div className="flex items-center gap-2">
-              <span className="text-lg sm:text-xl font-extrabold tracking-tight">Comunidad OdontoLatam</span>
-              <span className="text-[10px] font-bold bg-amber-300 text-amber-900 px-1.5 py-0.5 rounded">BETA</span>
-            </div>
-            <div className="text-[11px] sm:text-xs text-white/80 font-medium hidden sm:block">
-              La red de odontólogos de Latinoamérica
-            </div>
+          <div className="leading-tight min-w-0">
+            <span className="block text-sm sm:text-lg font-extrabold tracking-tight truncate">Comunidad OdontoLatam</span>
+            <span className="block text-[11px] text-white/75 font-medium truncate">La red de odontólogos de LATAM</span>
           </div>
         </Link>
 
