@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ImageUpload } from '@/components/comunidad/ImageUpload';
 
 const SPECIALTIES = [
   { value: 'periodoncia',      label: 'Periodoncia',         icon: 'genetics',           specialists: 23 },
@@ -63,6 +64,7 @@ export function ClinicalPostModal({ onClose }: Props) {
   const [addPoll, setAddPoll] = useState(false);
   const [pollOptions, setPollOptions] = useState(['', '']);
   const [submitted, setSubmitted] = useState(false);
+  const [images, setImages] = useState<File[]>([]);
 
   // lock scroll while open
   useEffect(() => {
@@ -334,15 +336,14 @@ export function ClinicalPostModal({ onClose }: Props) {
           {/* ── Imágenes ── */}
           <div>
             <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">
-              Imágenes clínicas <span className="font-normal text-slate-300 normal-case tracking-normal">(opcional, hasta 8)</span>
+              Imágenes clínicas <span className="font-normal text-slate-400 normal-case tracking-normal">(opcional, hasta 8)</span>
             </label>
-            <div className="flex items-center gap-3 py-5 px-4 border-2 border-dashed border-slate-200 rounded-xl hover:border-primary/40 hover:bg-primary/5 transition cursor-pointer">
-              <span className="material-symbols-outlined text-[28px] text-slate-300">add_photo_alternate</span>
-              <div>
-                <p className="text-sm font-semibold text-slate-500">Arrastrá imágenes o hacé click</p>
-                <p className="text-xs text-slate-400">PNG, JPG, HEIC — hasta 10 MB cada una</p>
-              </div>
-            </div>
+            <ImageUpload
+              files={images}
+              onChange={setImages}
+              maxFiles={8}
+              hint="Radiografías, fotos clínicas, capturas de pantalla — PNG, JPG, HEIC"
+            />
           </div>
         </div>
 

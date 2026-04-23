@@ -10,7 +10,7 @@ export default function CommunityLayout({ children }: { children: React.ReactNod
 
         {/* ── Left nav ── */}
         <aside className="hidden lg:block w-56 shrink-0 border-r border-slate-200 bg-white">
-          <div className="sticky top-20 p-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+          <div className="sticky top-20 flex flex-col h-[calc(100vh-80px)]">
             <CommunitySidebar />
           </div>
         </aside>

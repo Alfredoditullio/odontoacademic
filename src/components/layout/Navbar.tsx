@@ -13,11 +13,10 @@ const NAV_LINKS = [
     children: [
       { href: '/recursos/vademecum', label: 'Vademécum', icon: 'medication' },
       { href: '/recursos/atlas', label: 'Atlas', icon: 'biotech' },
-      { href: '/recursos/educacion', label: 'Educación', icon: 'school' },
+      { href: '/recursos/consentimientos', label: 'Consentimientos', icon: 'description' },
     ],
   },
   { href: '/blog', label: 'Blog' },
-  { href: '/tienda', label: 'Tienda' },
 ];
 
 export function Navbar() {

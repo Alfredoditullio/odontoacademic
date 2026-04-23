@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { MOCK_EVENTS } from '@/data/mock-community';
+import { CreateEventModal } from '@/components/comunidad/CreateEventModal';
 import type { CommunityEvent, Profile } from '@/lib/types';
 
 type EventWithAuthor = CommunityEvent & { author: Pick<Profile, 'display_name' | 'handle' | 'avatar_url'> };
@@ -156,12 +157,14 @@ export default function EventosPage() {
   const [regionFilter, setRegionFilter] = useState('Todas');
   const [search, setSearch]             = useState('');
   const [showPast, setShowPast]         = useState(false);
+  const [showModal, setShowModal]       = useState(false);
+  const [userEvents, setUserEvents]     = useState<EventWithAuthor[]>([]);
 
   const now = new Date();
 
   const sorted = useMemo(
-    () => [...MOCK_EVENTS].sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime()),
-    [],
+    () => [...userEvents, ...MOCK_EVENTS].sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime()),
+    [userEvents],
   );
 
   const filtered = useMemo(() => {
@@ -196,16 +199,27 @@ export default function EventosPage() {
 
       {/* Header */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
-        <div className="flex items-center gap-3 mb-1">
-          <span className="material-symbols-outlined text-primary text-[28px]">event</span>
-          <h1 className="text-xl font-black text-slate-900">Eventos 2026</h1>
-          <span className="text-xs font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
-            {upcomingCount} próximos
-          </span>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <span className="material-symbols-outlined text-primary text-[28px]">event</span>
+              <h1 className="text-xl font-black text-slate-900">Eventos 2026</h1>
+              <span className="text-xs font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
+                {upcomingCount} próximos
+              </span>
+            </div>
+            <p className="text-sm text-slate-500 ml-[40px]">
+              Congresos, ferias, webinars y talleres del mundo dental en 2026. Links directos a las páginas oficiales.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="shrink-0 inline-flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/90 transition shadow-sm"
+          >
+            <span className="material-symbols-outlined text-[18px]">add_circle</span>
+            Publicar evento
+          </button>
         </div>
-        <p className="text-sm text-slate-500 ml-[40px]">
-          Congresos, ferias, webinars y talleres del mundo dental en 2026. Links directos a las páginas oficiales.
-        </p>
       </div>
 
       {/* Filters */}
@@ -287,6 +301,17 @@ export default function EventosPage() {
         <span className="material-symbols-outlined text-[16px] shrink-0 mt-0.5 text-slate-400">info</span>
         <p>Los eventos marcados con <strong>Ver info / Inscripción</strong> enlazan a las páginas oficiales de cada organización. OdontoLatam no organiza ni es responsable de estos eventos.</p>
       </div>
+
+      {/* Create event modal */}
+      {showModal && (
+        <CreateEventModal
+          onClose={() => setShowModal(false)}
+          onCreated={(e) => {
+            setUserEvents((prev) => [e, ...prev]);
+            setShowModal(false);
+          }}
+        />
+      )}
     </div>
   );
 }

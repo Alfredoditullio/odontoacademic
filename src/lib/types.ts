@@ -182,6 +182,26 @@ export interface CommunityEvent {
   created_at: string;
 }
 
+export type JobType     = 'empleado' | 'socio' | 'guardia' | 'reemplazo' | 'docente' | 'investigacion';
+export type JobModality = 'presencial' | 'hibrido' | 'remoto';
+
+export interface JobListing {
+  id: string;
+  title: string;
+  clinic: string | null;
+  type: JobType;
+  modality: JobModality;
+  specialty: string | null;
+  city: string;
+  country: string;
+  description: string;
+  requirements: string[];
+  contact: string;
+  is_paid: boolean;
+  salary_range: string | null;
+  posted_at: string;
+}
+
 export interface Poll {
   id: string;
   post_id: string;

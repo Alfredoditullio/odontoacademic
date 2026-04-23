@@ -9,6 +9,8 @@ import { PresentationModal, type PresentationRecord } from '@/components/comunid
 import { MarketModal } from '@/components/comunidad/MarketModal';
 import { SalaDeEsperaModal } from '@/components/comunidad/SalaDeEsperaModal';
 import { StudentPostModal } from '@/components/comunidad/StudentPostModal';
+import { MarketingPostModal } from '@/components/comunidad/MarketingPostModal';
+import { IATechPostModal } from '@/components/comunidad/IATechPostModal';
 import { OFFICIAL_CREATORS } from '@/data/mock-community';
 
 const SIX_MONTHS_MS = 1000 * 60 * 60 * 24 * 30 * 6;
@@ -34,7 +36,9 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   const [showPresentationModal, setShowPresentationModal] = useState(false);
   const [showMarketModal, setShowMarketModal] = useState(false);
   const [showSalaModal, setShowSalaModal] = useState(false);
-  const [showStudentModal, setShowStudentModal] = useState(false);
+  const [showStudentModal, setShowStudentModal]     = useState(false);
+  const [showMarketingModal, setShowMarketingModal] = useState(false);
+  const [showIATechModal, setShowIATechModal]       = useState(false);
 
   // Presentation state (loaded from localStorage)
   const [presentation, setPresentation] = useState<PresentationRecord | null>(null);
@@ -68,6 +72,8 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   const isMarket         = slug === 'mercado';
   const isSala           = slug === 'sala-de-espera';
   const isCarrera        = slug === 'carrera-estudios';
+  const isMarketing      = slug === 'marketing-dental';
+  const isIATech         = slug === 'ia-tecnologia';
 
   // Presentation logic
   const alreadyPresented = !!presentation;
@@ -84,6 +90,8 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
       {showMarketModal       && <MarketModal onClose={() => setShowMarketModal(false)} />}
       {showSalaModal         && <SalaDeEsperaModal onClose={() => setShowSalaModal(false)} />}
       {showStudentModal      && <StudentPostModal onClose={() => setShowStudentModal(false)} />}
+      {showMarketingModal    && <MarketingPostModal onClose={() => setShowMarketingModal(false)} />}
+      {showIATechModal       && <IATechPostModal onClose={() => setShowIATechModal(false)} />}
 
       <div className="space-y-4">
 
@@ -143,6 +151,30 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                 className="shrink-0 inline-flex items-center gap-2 bg-white text-indigo-700 font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-indigo-50 transition shadow-sm"
               >
                 <span className="material-symbols-outlined text-[18px]">edit</span>
+                <span className="hidden sm:inline">Publicar</span>
+                <span className="sm:hidden">Publicar</span>
+              </button>
+            )}
+
+            {/* ── CTA: Marketing Dental ── */}
+            {isMarketing && (
+              <button
+                onClick={() => setShowMarketingModal(true)}
+                className="shrink-0 inline-flex items-center gap-2 bg-white text-amber-700 font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-amber-50 transition shadow-sm"
+              >
+                <span className="material-symbols-outlined text-[18px]">campaign</span>
+                <span className="hidden sm:inline">Publicar</span>
+                <span className="sm:hidden">Publicar</span>
+              </button>
+            )}
+
+            {/* ── CTA: IA y Tecnología ── */}
+            {isIATech && (
+              <button
+                onClick={() => setShowIATechModal(true)}
+                className="shrink-0 inline-flex items-center gap-2 bg-white text-violet-700 font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-violet-50 transition shadow-sm"
+              >
+                <span className="material-symbols-outlined text-[18px]">smart_toy</span>
                 <span className="hidden sm:inline">Publicar</span>
                 <span className="sm:hidden">Publicar</span>
               </button>
@@ -300,6 +332,26 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
           </div>
         )}
 
+        {/* Marketing hint */}
+        {isMarketing && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
+            <span className="material-symbols-outlined text-amber-500 text-[20px] shrink-0 mt-0.5">campaign</span>
+            <p className="text-xs text-amber-700 leading-relaxed">
+              <strong>Compartí lo que funciona.</strong> Estrategias de captación, herramientas de marketing, casos de éxito reales y preguntas a la comunidad — todo bienvenido. Cuanto más específico, más útil para todos.
+            </p>
+          </div>
+        )}
+
+        {/* IA & Tech hint */}
+        {isIATech && (
+          <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-3 flex items-start gap-3">
+            <span className="material-symbols-outlined text-violet-500 text-[20px] shrink-0 mt-0.5">smart_toy</span>
+            <p className="text-xs text-violet-700 leading-relaxed">
+              <strong>La tecnología dental evoluciona rápido.</strong> Compartí herramientas de IA, software de gestión, equipos digitales o abrí un debate sobre el futuro de la odontología. Las reviews honestas son las más valiosas.
+            </p>
+          </div>
+        )}
+
         {/* Clinical hint */}
         {isClinical && (
           <div className="bg-sky-50 border border-sky-200 rounded-xl px-4 py-3 flex items-start gap-3">
@@ -331,6 +383,24 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
               >
                 <span className="material-symbols-outlined text-[18px]">waving_hand</span>
                 Ser el primero en presentarse
+              </button>
+            )}
+            {isMarketing && (
+              <button
+                onClick={() => setShowMarketingModal(true)}
+                className="mt-4 inline-flex items-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-amber-600 transition"
+              >
+                <span className="material-symbols-outlined text-[18px]">campaign</span>
+                Ser el primero en publicar
+              </button>
+            )}
+            {isIATech && (
+              <button
+                onClick={() => setShowIATechModal(true)}
+                className="mt-4 inline-flex items-center gap-2 bg-violet-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-violet-700 transition"
+              >
+                <span className="material-symbols-outlined text-[18px]">smart_toy</span>
+                Ser el primero en publicar
               </button>
             )}
           </div>

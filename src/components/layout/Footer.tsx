@@ -7,13 +7,12 @@ const FOOTER_LINKS = {
     { href: '/', label: 'Inicio' },
     { href: '/nosotros', label: 'Nosotros' },
     { href: '/blog', label: 'Blog' },
-    { href: '/tienda', label: 'Tienda' },
     { href: '/faq', label: 'Preguntas frecuentes' },
   ],
   'Recursos': [
     { href: '/recursos/vademecum', label: 'Vademécum' },
     { href: '/recursos/atlas', label: 'Atlas de Patología Oral' },
-    { href: '/recursos/educacion', label: 'Educación Continua' },
+    { href: '/recursos/consentimientos', label: 'Consentimientos' },
   ],
   'Comunidad': [
     { href: '/comunidad', label: 'Feed' },

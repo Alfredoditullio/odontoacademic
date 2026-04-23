@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import type { PostWithAuthor } from '@/lib/types';
 import { timeAgo, initials } from '@/lib/utils';
+import { ReportModal } from './ReportModal';
 
 const POST_TYPE_BADGE: Record<string, { label: string; icon: string; className: string }> = {
   help:     { label: 'Pido ayuda', icon: 'help',         className: 'bg-amber-100 text-amber-700'   },
@@ -68,6 +69,70 @@ function RoleBadge({ role, studyYear }: { role: string; studyYear?: number | nul
     );
   }
   return null;
+}
+
+/* ─── Kebab menu ─── */
+function PostMenu({ postTitle }: { postTitle: string }) {
+  const [open, setOpen]         = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  /* Close on outside click */
+  useEffect(() => {
+    if (!open) return;
+    function handle(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handle);
+    return () => document.removeEventListener('mousedown', handle);
+  }, [open]);
+
+  return (
+    <>
+      <div ref={ref} className="relative shrink-0">
+        <button
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen((v) => !v); }}
+          className="size-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+          title="Opciones"
+        >
+          <span className="material-symbols-outlined text-[18px]">more_vert</span>
+        </button>
+
+        {open && (
+          <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-lg border border-slate-200 py-1 z-20">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpen(false);
+                setReporting(true);
+              }}
+              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-red-600 hover:bg-red-50 transition font-semibold"
+            >
+              <span className="material-symbols-outlined text-[17px]">flag</span>
+              Reportar
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigator.clipboard.writeText(window.location.origin + '/comunidad/p/' + postTitle);
+                setOpen(false);
+              }}
+              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition"
+            >
+              <span className="material-symbols-outlined text-[17px]">link</span>
+              Copiar enlace
+            </button>
+          </div>
+        )}
+      </div>
+
+      {reporting && (
+        <ReportModal postTitle={postTitle} onClose={() => setReporting(false)} />
+      )}
+    </>
+  );
 }
 
 export function PostCard({ post }: { post: PostWithAuthor }) {
@@ -148,6 +213,9 @@ export function PostCard({ post }: { post: PostWithAuthor }) {
             <span className="text-xs font-black">{likeCount}</span>
           </button>
         )}
+
+        {/* 3-dot menu — always present */}
+        <PostMenu postTitle={post.title} />
       </header>
 
       <Link href={`/comunidad/p/${post.id}`} className="block group">

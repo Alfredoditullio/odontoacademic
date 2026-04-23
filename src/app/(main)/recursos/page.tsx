@@ -21,12 +21,12 @@ const SECTIONS = [
     count: '200+ patologías',
   },
   {
-    href: '/recursos/educacion',
-    icon: 'school',
-    color: 'from-emerald-500 to-teal-500',
-    title: 'Educación Continua',
-    desc: 'Diplomados, cursos, talleres y webinars con los mejores especialistas de Latinoamérica. Certificación incluida.',
-    count: '50+ programas',
+    href: '/recursos/consentimientos',
+    icon: 'description',
+    color: 'from-violet-500 to-purple-600',
+    title: 'Consentimientos Informados',
+    desc: 'Modelos de consentimientos informados para los procedimientos más comunes en odontología. Descargá y adaptá a tu práctica.',
+    count: 'Próximamente',
   },
 ];
 

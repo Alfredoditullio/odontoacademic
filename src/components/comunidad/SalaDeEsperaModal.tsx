@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ImageUpload } from '@/components/comunidad/ImageUpload';
 
 const POST_TYPES = [
   {
@@ -45,6 +46,7 @@ export function SalaDeEsperaModal({ onClose }: Props) {
   const [pollOptions, setPollOptions] = useState(['', '', '']);
   const [rulesOk, setRulesOk] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -56,7 +58,8 @@ export function SalaDeEsperaModal({ onClose }: Props) {
   function updateOption(i: number, val: string) { setPollOptions(pollOptions.map((o, idx) => idx === i ? val : o)); }
 
   const canSubmit = title.trim() && rulesOk &&
-    (type !== 'poll' || pollOptions.filter((o) => o.trim()).length >= 2);
+    (type !== 'poll' || pollOptions.filter((o) => o.trim()).length >= 2) &&
+    (type !== 'meme' || images.length > 0);
 
   if (submitted) {
     return (
@@ -194,13 +197,14 @@ export function SalaDeEsperaModal({ onClose }: Props) {
             <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">
               {type === 'meme' ? 'Imagen / Meme *' : 'Imagen (opcional)'}
             </label>
-            <div className="flex items-center gap-3 py-5 px-4 border-2 border-dashed border-orange-200 rounded-xl hover:border-orange-400 hover:bg-orange-50 transition cursor-pointer">
-              <span className="text-3xl">🖼️</span>
-              <div>
-                <p className="text-sm font-semibold text-slate-600">Arrastrá tu imagen o hacé click</p>
-                <p className="text-xs text-slate-400">PNG, JPG, GIF — hasta 10 MB</p>
-              </div>
-            </div>
+            <ImageUpload
+              files={images}
+              onChange={setImages}
+              maxFiles={1}
+              required={type === 'meme'}
+              hint="PNG, JPG, GIF, WEBP — hasta 10 MB"
+              dropzoneClass="hover:border-orange-400 hover:bg-orange-50"
+            />
           </div>
 
           {/* Reglas */}

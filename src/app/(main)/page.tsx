@@ -1,20 +1,17 @@
 import Link from 'next/link';
 import { BLOG_POSTS } from '@/data/mock-blog';
+import { TestimonialsCarousel } from '@/components/home/TestimonialsCarousel';
 
 const FEATURES = [
-  { icon: 'medication', title: 'Vademécum', desc: 'Medicamentos de uso dental con dosis, contraindicaciones e interacciones.', href: '/recursos/vademecum', color: 'from-emerald-500 to-teal-600' },
-  { icon: 'biotech', title: 'Atlas de Patología', desc: 'Atlas completo de patología oral con imágenes clínicas.', href: '/recursos/atlas', color: 'from-rose-500 to-pink-500' },
-  { icon: 'school', title: 'Educación Continua', desc: 'Diplomados, cursos, talleres y webinars con certificación.', href: '/recursos/educacion', color: 'from-emerald-500 to-teal-500' },
-  { icon: 'groups', title: 'Comunidad', desc: 'Red de odontólogos de Latinoamérica para compartir y aprender.', href: '/comunidad', color: 'from-sky-500 to-cyan-500' },
-  { icon: 'newspaper', title: 'Blog', desc: 'Artículos, noticias y tendencias del mundo dental.', href: '/blog', color: 'from-violet-500 to-purple-500' },
-  { icon: 'storefront', title: 'Tienda', desc: 'Instrumental y materiales dentales de las mejores marcas.', href: '/tienda', color: 'from-amber-500 to-orange-500' },
+  { icon: 'medication',   title: 'Vademécum',       desc: 'Medicamentos de uso dental con dosis, contraindicaciones e interacciones.',    href: '/recursos/vademecum',    color: 'from-emerald-500 to-teal-600'   },
+  { icon: 'biotech',      title: 'Atlas de Patología', desc: 'Atlas completo de patología oral con imágenes clínicas.',                    href: '/recursos/atlas',        color: 'from-rose-500 to-pink-500'      },
+  { icon: 'description',  title: 'Consentimientos', desc: 'Modelos de consentimientos informados para los procedimientos más comunes.',    href: '/recursos/consentimientos', color: 'from-violet-500 to-purple-600' },
+  { icon: 'groups',       title: 'Comunidad',       desc: 'Red de odontólogos de Latinoamérica para compartir y aprender.',               href: '/comunidad',             color: 'from-sky-500 to-cyan-500'       },
+  { icon: 'event',        title: 'Eventos',         desc: 'Congresos, ferias, webinars y talleres del mundo dental en 2026.',             href: '/comunidad/eventos',     color: 'from-cyan-500 to-blue-600'      },
+  { icon: 'newspaper',    title: 'Blog',            desc: 'Artículos, noticias y tendencias del mundo dental.',                           href: '/blog',                  color: 'from-violet-500 to-purple-500'  },
 ];
 
-const TESTIMONIALS = [
-  { name: 'Dr. Martín Rodríguez', specialty: 'Implantólogo — Buenos Aires', text: 'OdontoLatam transformó la forma en que me mantengo actualizado. Los casos clínicos que comparten los colegas y la comunidad son de primer nivel.' },
-  { name: 'Dra. Lucía Fernández', specialty: 'Periodoncista — CDMX', text: 'La comunidad me permitió conectar con colegas de toda Latinoamérica. Los debates clínicos son increíblemente enriquecedores.' },
-  { name: 'Dr. Carlos Méndez', specialty: 'Radiólogo — Bogotá', text: 'El atlas de patología oral es una herramienta indispensable en mi práctica diaria. Excelente calidad de contenido.' },
-];
+
 
 const STATS = [
   { value: '5,000+', label: 'Odontólogos activos', icon: 'group' },
@@ -23,16 +20,6 @@ const STATS = [
   { value: '500+', label: 'Artículos publicados', icon: 'menu_book' },
 ];
 
-const SPONSORS = [
-  { name: 'DentalCore', color: '#0284c7' },
-  { name: '3M Oral Care', color: '#e11d48' },
-  { name: 'Straumann', color: '#1e40af' },
-  { name: 'Dentsply Sirona', color: '#0891b2' },
-  { name: 'Ivoclar', color: '#7c3aed' },
-  { name: 'GC Corporation', color: '#059669' },
-  { name: 'Hu-Friedy', color: '#d97706' },
-  { name: 'Ormco', color: '#dc2626' },
-];
 
 export default function HomePage() {
   const latestPosts = BLOG_POSTS.slice(0, 3);
@@ -185,86 +172,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── DENTALCORE FEATURED BANNER ─── */}
-      <section className="py-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center gap-8">
-            {/* Badge + copy */}
-            <div className="flex-1 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 bg-sky-500/15 border border-sky-400/30 rounded-full px-4 py-1.5 text-xs font-bold text-sky-300 uppercase tracking-wider mb-4">
-                <span className="material-symbols-outlined text-[15px]">verified</span>
-                Software recomendado por OdontoLatam
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-snug">
-                ¿Usás un software dental que realmente entienda la clínica?
-              </h2>
-              <p className="text-slate-400 leading-relaxed max-w-2xl">
-                <strong className="text-slate-200">DentalCore</strong> es el único software dental de Latinoamérica con historia clínica por módulo clínico, odontograma bidireccional, IA integrada y periodontograma completo. No es una agenda — es una plataforma clínica real. Diseñado para consultorios chicos y medianos, se aprende en 48 horas.
-              </p>
-              <div className="flex flex-wrap gap-3 mt-5 justify-center lg:justify-start">
-                <a
-                  href="https://dentalcore.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-teal-500 text-white px-6 py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-lg shadow-sky-500/20"
-                >
-                  <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-                  Conocer DentalCore
-                </a>
-                <a
-                  href="/blog/dentalcore-software-dental-gestion-consultorio-odontologico"
-                  className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-white/20 transition"
-                >
-                  <span className="material-symbols-outlined text-[18px]">article</span>
-                  Leer el análisis completo
-                </a>
-              </div>
-            </div>
-            {/* Feature pills */}
-            <div className="shrink-0 grid grid-cols-2 gap-2.5 w-full max-w-sm">
-              {[
-                { icon: 'stethoscope', label: 'Historia clínica real', sub: 'Módulos por especialidad' },
-                { icon: 'genetics', label: 'Odontograma IA', sub: 'Bidireccional y dinámico' },
-                { icon: 'psychology', label: 'IA Gemini 2.0', sub: '14 flujos clínicos' },
-                { icon: 'schedule', label: 'Setup en 1 hora', sub: 'Sin capacitación' },
-              ].map((f) => (
-                <div key={f.label} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition">
-                  <span className="material-symbols-outlined text-sky-400 text-[22px]">{f.icon}</span>
-                  <div className="text-white text-xs font-bold mt-1">{f.label}</div>
-                  <div className="text-slate-500 text-[10px] mt-0.5">{f.sub}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── SPONSORS / BRANDS MARQUEE ─── */}
-      <section className="py-10 bg-slate-50 border-b border-slate-100 overflow-hidden">
-        <p className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">
-          Marcas que confían en nosotros
-        </p>
-        <div className="relative">
-          {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-50 to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-50 to-transparent z-10" />
-          {/* Marquee track */}
-          <div className="flex animate-marquee w-max">
-            {[...SPONSORS, ...SPONSORS].map((s, i) => (
-              <div
-                key={`${s.name}-${i}`}
-                className="flex items-center gap-2.5 mx-8 shrink-0"
-              >
-                <div className="size-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: s.color + '12' }}>
-                  <span className="material-symbols-outlined text-[20px]" style={{ color: s.color }}>verified</span>
-                </div>
-                <span className="text-base font-bold text-slate-500 tracking-tight whitespace-nowrap">{s.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ─── FEATURES FLIP CARDS ─── */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -321,6 +228,7 @@ export default function HomePage() {
                 </div>
               </Link>
             ))}
+
           </div>
         </div>
       </section>
@@ -578,6 +486,61 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* ── Bolsa de Trabajo — col-span-2 para completar la última fila junto a Encuestas ── */}
+            <Link
+              href="/comunidad/trabajo"
+              className="group lg:col-span-2 relative bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-8 text-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 block"
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <div className="relative flex flex-col sm:flex-row items-start gap-6">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="size-12 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <span className="material-symbols-outlined text-[28px]">work</span>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold">Bolsa de Trabajo</h3>
+                      <p className="text-sm text-white/70">Oportunidades en toda Latinoamérica</p>
+                    </div>
+                  </div>
+                  <p className="text-white/80 leading-relaxed mb-5 max-w-lg">
+                    Encontrá o publicá ofertas laborales para odontólogos: empleos en relación de dependencia, guardias, sociedades, reemplazos, docencia e investigación.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { icon: 'badge',     label: 'Empleado'     },
+                      { icon: 'handshake', label: 'Socio'        },
+                      { icon: 'schedule',  label: 'Guardia'      },
+                      { icon: 'sync_alt',  label: 'Reemplazo'    },
+                      { icon: 'school',    label: 'Docente'      },
+                      { icon: 'science',   label: 'Investigación' },
+                    ].map((jt) => (
+                      <span key={jt.label} className="inline-flex items-center gap-1.5 text-[11px] font-bold bg-white/15 text-white border border-white/20 px-2.5 py-1 rounded-full">
+                        <span className="material-symbols-outlined text-[13px]">{jt.icon}</span>
+                        {jt.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                {/* Mini preview de oferta */}
+                <div className="shrink-0 flex flex-col gap-2 w-full sm:w-[220px]">
+                  {[
+                    { title: 'Odontólogo general', lugar: 'Buenos Aires · AR', tipo: 'Empleado' },
+                    { title: 'Guardia nocturna',   lugar: 'Santiago · CL',     tipo: 'Guardia'  },
+                    { title: 'Socio para clínica', lugar: 'Bogotá · CO',       tipo: 'Socio'    },
+                  ].map((j) => (
+                    <div key={j.title} className="bg-white/10 backdrop-blur rounded-xl px-3.5 py-3 border border-white/10">
+                      <p className="text-xs font-bold text-white leading-tight">{j.title}</p>
+                      <div className="flex items-center justify-between mt-1">
+                        <p className="text-[11px] text-white/60">{j.lugar}</p>
+                        <span className="text-[10px] font-black bg-white/15 text-white px-2 py-0.5 rounded-full">{j.tipo}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Link>
+
             {/* ── Encuestas ── */}
             <div className="group bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
               <div className="size-11 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -670,41 +633,14 @@ export default function HomePage() {
       </section>
 
       {/* ─── TESTIMONIALS ─── */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-3">Lo que dicen nuestros miembros</h2>
-            <p className="text-lg text-slate-500">Miles de odontólogos ya son parte de OdontoLatam.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className="bg-white rounded-2xl border border-slate-200 p-6">
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="material-symbols-outlined text-amber-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      star
-                    </span>
-                  ))}
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
-                <div>
-                  <div className="font-bold text-slate-900 text-sm">{t.name}</div>
-                  <div className="text-xs text-slate-400">{t.specialty}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TestimonialsCarousel />
 
       {/* ─── CTA ─── */}
       <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-10 sm:p-16 text-white relative overflow-hidden">
-            {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-sky-500/20 to-transparent rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-teal-500/20 to-transparent rounded-full blur-3xl" />
-
             <div className="relative flex flex-col lg:flex-row items-center gap-10">
               <div className="flex-1 text-center lg:text-left">
                 <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
@@ -722,16 +658,13 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="hidden lg:flex shrink-0 flex-col gap-3 items-end">
-                {/* OdontoLatam logo mark */}
                 <div className="size-28 rounded-3xl bg-gradient-to-br from-sky-400/20 to-teal-400/20 border border-white/10 flex items-center justify-center">
                   <svg viewBox="0 0 80 80" className="size-20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    {/* Globe */}
                     <circle cx="40" cy="40" r="32" stroke="rgba(125,211,252,0.5)" strokeWidth="2"/>
                     <ellipse cx="40" cy="40" rx="14" ry="32" stroke="rgba(125,211,252,0.5)" strokeWidth="1.5"/>
                     <line x1="8" y1="40" x2="72" y2="40" stroke="rgba(125,211,252,0.5)" strokeWidth="1.5"/>
                     <line x1="12" y1="26" x2="68" y2="26" stroke="rgba(125,211,252,0.3)" strokeWidth="1"/>
                     <line x1="12" y1="54" x2="68" y2="54" stroke="rgba(125,211,252,0.3)" strokeWidth="1"/>
-                    {/* Tooth */}
                     <path d="M40 18 C34 18 29 22 29 29 C29 33 31 35 31 40 L49 40 C49 35 51 33 51 29 C51 22 46 18 40 18Z" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5"/>
                     <path d="M31 40 C31 40 32 48 34 52 C35 54 36 54 37 52 L40 44 L43 52 C44 54 45 54 46 52 C48 48 49 40 49 40Z" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5"/>
                   </svg>
@@ -742,6 +675,34 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── DENTALCORE — partner strip ─── */}
+      <section className="bg-gradient-to-r from-sky-600 via-primary to-sky-700 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              {/* Logo badge */}
+              <div className="shrink-0 flex items-center gap-2 bg-white/15 rounded-lg px-3 py-1.5">
+                <span className="material-symbols-outlined text-white text-[18px]">stethoscope</span>
+                <span className="text-white font-black text-sm tracking-tight">DentalCore</span>
+              </div>
+              <div className="h-5 w-px bg-white/25 shrink-0 hidden sm:block" />
+              <p className="text-sky-100 text-sm">
+                El software de gestión clínica para odontólogos — IA integrada, odontograma, historia clínica por especialidad y mucho más.
+              </p>
+            </div>
+            <a
+              href="https://dentalcore.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 inline-flex items-center gap-1.5 bg-white text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-sky-50 transition-colors whitespace-nowrap shadow-sm"
+            >
+              Visitar dentalcore.app
+              <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+            </a>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ImageUpload } from '@/components/comunidad/ImageUpload';
 
 /* ─── Static data ─── */
 const LISTING_TYPES = [
@@ -78,6 +79,7 @@ export function MarketModal({ onClose }: Props) {
   const [tradeFor, setTradeFor] = useState('');
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -386,17 +388,17 @@ export function MarketModal({ onClose }: Props) {
           <div>
             <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">
               Fotos {isSell ? 'del artículo' : isBuy ? '(referencia)' : 'del artículo'}
-              <span className="font-normal text-slate-300 normal-case tracking-normal ml-1">(hasta 8, muy recomendado)</span>
+              <span className="font-normal text-slate-400 normal-case tracking-normal ml-1">
+                {isSell ? '(hasta 8, muy recomendado)' : '(opcional)'}
+              </span>
             </label>
-            <div className="flex items-center gap-3 py-5 px-4 border-2 border-dashed border-slate-200 rounded-xl hover:border-primary/40 hover:bg-primary/5 transition cursor-pointer">
-              <span className="material-symbols-outlined text-[28px] text-slate-300">add_photo_alternate</span>
-              <div>
-                <p className="text-sm font-semibold text-slate-500">Arrastrá fotos o hacé click</p>
-                <p className="text-xs text-slate-400">
-                  {isSell ? 'Incluí fotos reales del artículo — aumenta mucho las consultas.' : 'Opcional: adjuntá imagen de referencia.'}
-                </p>
-              </div>
-            </div>
+            <ImageUpload
+              files={images}
+              onChange={setImages}
+              maxFiles={8}
+              hint={isSell ? 'Incluí fotos reales — aumenta mucho las consultas. PNG, JPG' : 'Referencia opcional. PNG, JPG'}
+              dropzoneClass="hover:border-emerald-400/50 hover:bg-emerald-50"
+            />
           </div>
 
           {/* ── Disclaimer checkbox ── */}
