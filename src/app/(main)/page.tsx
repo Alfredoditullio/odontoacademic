@@ -3,12 +3,42 @@ import { BLOG_POSTS } from '@/data/mock-blog';
 import { TestimonialsCarousel } from '@/components/home/TestimonialsCarousel';
 
 const FEATURES = [
-  { icon: 'medication',   title: 'Vademécum',       desc: 'Medicamentos de uso dental con dosis, contraindicaciones e interacciones.',    href: '/recursos/vademecum',    color: 'from-emerald-500 to-teal-600'   },
-  { icon: 'biotech',      title: 'Atlas de Patología', desc: 'Atlas completo de patología oral con imágenes clínicas.',                    href: '/recursos/atlas',        color: 'from-rose-500 to-pink-500'      },
-  { icon: 'description',  title: 'Consentimientos', desc: 'Modelos de consentimientos informados para los procedimientos más comunes.',    href: '/recursos/consentimientos', color: 'from-violet-500 to-purple-600' },
-  { icon: 'groups',       title: 'Comunidad',       desc: 'Red de odontólogos de Latinoamérica para compartir y aprender.',               href: '/comunidad',             color: 'from-sky-500 to-cyan-500'       },
-  { icon: 'event',        title: 'Eventos',         desc: 'Congresos, ferias, webinars y talleres del mundo dental en 2026.',             href: '/comunidad/eventos',     color: 'from-cyan-500 to-blue-600'      },
-  { icon: 'newspaper',    title: 'Blog',            desc: 'Artículos, noticias y tendencias del mundo dental.',                           href: '/blog',                  color: 'from-violet-500 to-purple-500'  },
+  {
+    icon: 'medication', title: 'Vademécum',
+    desc: 'Medicamentos de uso dental con dosis, contraindicaciones e interacciones.',
+    href: '/recursos/vademecum', color: 'from-emerald-500 to-teal-600',
+    image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80&auto=format&fit=crop',
+  },
+  {
+    icon: 'biotech', title: 'Atlas de Patología',
+    desc: 'Atlas completo de patología oral con imágenes clínicas.',
+    href: '/recursos/atlas', color: 'from-rose-500 to-pink-500',
+    image: 'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=800&q=80&auto=format&fit=crop',
+  },
+  {
+    icon: 'description', title: 'Consentimientos',
+    desc: 'Modelos de consentimientos informados para los procedimientos más comunes.',
+    href: '/recursos/consentimientos', color: 'from-violet-500 to-purple-600',
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80&auto=format&fit=crop',
+  },
+  {
+    icon: 'groups', title: 'Comunidad',
+    desc: 'Red de odontólogos de Latinoamérica para compartir y aprender.',
+    href: '/comunidad', color: 'from-sky-500 to-cyan-500',
+    image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop',
+  },
+  {
+    icon: 'event', title: 'Eventos',
+    desc: 'Congresos, ferias, webinars y talleres del mundo dental en 2026.',
+    href: '/comunidad/eventos', color: 'from-cyan-500 to-blue-600',
+    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80&auto=format&fit=crop',
+  },
+  {
+    icon: 'newspaper', title: 'Blog',
+    desc: 'Artículos, noticias y tendencias del mundo dental.',
+    href: '/blog', color: 'from-violet-500 to-purple-500',
+    image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80&auto=format&fit=crop',
+  },
 ];
 
 
@@ -205,12 +235,27 @@ export default function HomePage() {
                 <div className="hidden sm:block [perspective:1000px]">
                   <div className="relative h-56 transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                     {/* FRONT */}
-                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${f.color} p-6 flex flex-col items-center justify-center text-center text-white shadow-lg [backface-visibility:hidden]`}>
-                      <div className="size-16 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center mb-4">
-                        <span className="material-symbols-outlined text-[36px]">{f.icon}</span>
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-lg [backface-visibility:hidden]">
+                      {/* Imagen de fondo */}
+                      <img
+                        src={f.image}
+                        alt={f.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      {/* Overlay con gradient de marca */}
+                      <div className={`absolute inset-0 bg-gradient-to-br ${f.color} opacity-70`} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                      {/* Contenido */}
+                      <div className="relative h-full p-6 flex flex-col items-center justify-center text-center text-white">
+                        <div className="size-16 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center mb-4 ring-1 ring-white/30">
+                          <span className="material-symbols-outlined text-[36px]">{f.icon}</span>
+                        </div>
+                        <h3 className="text-xl font-extrabold drop-shadow-md">{f.title}</h3>
+                        <span className="inline-flex items-center gap-1 text-xs font-bold mt-3 bg-white/20 backdrop-blur px-3 py-1.5 rounded-full ring-1 ring-white/30">
+                          Ver más
+                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </span>
                       </div>
-                      <h3 className="text-xl font-extrabold">{f.title}</h3>
-                      <p className="text-sm text-white/70 mt-2 font-medium">Hover para más info</p>
                     </div>
                     {/* BACK */}
                     <div className="absolute inset-0 rounded-2xl bg-white border border-slate-200 shadow-lg p-6 flex flex-col justify-center [backface-visibility:hidden] [transform:rotateY(180deg)]">

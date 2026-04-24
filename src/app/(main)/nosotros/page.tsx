@@ -23,6 +23,14 @@ const TEAM = [
     bio: 'Fundador de OdontoLatam. Odontólogo especialista en inteligencia artificial y tecnología aplicada a la práctica clínica. Lidera la visión estratégica y el desarrollo tecnológico de la plataforma.',
   },
   {
+    name: 'Od. Esp. Rodrigo Melo',
+    role: 'Co-fundador & Director de Comunidad',
+    specialty: 'Streaming & Social Media',
+    icon: 'stream',
+    color: 'from-violet-500 to-purple-600',
+    bio: 'Co-fundador de OdontoLatam. Lidera la administración de la comunidad, el streaming de casos clínicos en vivo y la estrategia de redes sociales. Puente entre los odontólogos de la región y la plataforma.',
+  },
+  {
     name: 'Dra. Lucía Fernández',
     role: 'Editora en Jefe',
     specialty: 'Periodoncia',
