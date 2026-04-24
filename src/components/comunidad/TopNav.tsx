@@ -30,8 +30,8 @@ export function CommunityTopNav() {
   const handle       = profile?.handle ?? null;
 
   return (
-    <header className="sticky top-0 z-30 bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600 shadow-sm">
-      <div className="w-full max-w-full px-4 sm:px-5 h-20 flex items-center gap-3 overflow-hidden">
+    <header className="sticky top-0 z-40 bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600 shadow-sm">
+      <div className="w-full max-w-full px-4 sm:px-5 h-20 flex items-center gap-3">
         <Link href="/comunidad" className="flex items-center gap-3 text-white group min-w-0">
           <div className="size-12 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center ring-1 ring-white/20 group-hover:bg-white/25 transition">
             <span className="material-symbols-outlined text-[28px]">groups</span>
