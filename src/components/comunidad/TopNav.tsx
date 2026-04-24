@@ -2,27 +2,16 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
-const LS_KEY = 'ol_profile';
+function initials(name: string) {
+  return name.trim().split(' ').filter(Boolean).map((w) => w[0]).join('').toUpperCase().slice(0, 2) || 'OL';
+}
 
 export function CommunityTopNav() {
+  const { profile, signOut } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [displayName, setDisplayName] = useState('');
-  const [avatarColor, setAvatarColor] = useState('from-sky-500 to-cyan-500');
-  const [avatarImg, setAvatarImg] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(LS_KEY);
-      if (raw) {
-        const data = JSON.parse(raw);
-        setDisplayName(data.profile?.displayName ?? '');
-        setAvatarColor(data.profile?.avatarColor ?? 'from-sky-500 to-cyan-500');
-        setAvatarImg(data.avatar ?? null);
-      }
-    } catch { /* ignore */ }
-  }, []);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -34,11 +23,11 @@ export function CommunityTopNav() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  function initials(name: string) {
-    return name.trim().split(' ').filter(Boolean).map((w) => w[0]).join('').toUpperCase().slice(0, 2) || 'MR';
-  }
-
-  const avatarLabel = displayName ? initials(displayName) : 'MR';
+  const avatarLabel  = profile?.display_name ? initials(profile.display_name) : 'OL';
+  const avatarColor  = profile?.avatar_color ?? 'from-sky-500 to-cyan-500';
+  const avatarImg    = profile?.avatar_url ?? null;
+  const displayName  = profile?.display_name ?? '';
+  const handle       = profile?.handle ?? null;
 
   return (
     <header className="sticky top-0 z-30 bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600 shadow-sm">
@@ -63,7 +52,6 @@ export function CommunityTopNav() {
             title="Notificaciones"
           >
             <span className="material-symbols-outlined text-[22px] text-white">notifications</span>
-            <span className="absolute -top-1 -right-1 size-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-sky-600">3</span>
           </Link>
 
           {/* Messages */}
@@ -73,7 +61,6 @@ export function CommunityTopNav() {
             title="Mensajes"
           >
             <span className="material-symbols-outlined text-[22px] text-white">mail</span>
-            <span className="absolute -top-1 -right-1 size-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-sky-600">2</span>
           </Link>
 
           {/* Avatar dropdown */}
@@ -106,15 +93,15 @@ export function CommunityTopNav() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-bold text-slate-900 truncate">{displayName || 'Mi perfil'}</p>
-                      <p className="text-xs text-slate-400">Ver perfil público</p>
+                      <p className="text-xs text-slate-400">{handle ? `@${handle}` : 'Ver perfil público'}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Menu items */}
                 {[
-                  { href: '/comunidad/u/dr-rodriguez', icon: 'person', label: 'Mi perfil público' },
-                  { href: '/comunidad/configuracion', icon: 'settings', label: 'Configuración' },
+                  { href: '/comunidad/configuracion', icon: 'person',        label: 'Mi perfil' },
+                  { href: '/comunidad/configuracion', icon: 'settings',      label: 'Configuración' },
                   { href: '/comunidad/configuracion', icon: 'notifications', label: 'Notificaciones' },
                 ].map((item) => (
                   <Link
@@ -129,14 +116,13 @@ export function CommunityTopNav() {
                 ))}
 
                 <div className="border-t border-slate-100 mt-2 pt-2">
-                  <Link
-                    href="/"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition"
+                  <button
+                    onClick={() => { setDropdownOpen(false); signOut(); }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition"
                   >
                     <span className="material-symbols-outlined text-[18px]">logout</span>
                     Cerrar sesión
-                  </Link>
+                  </button>
                 </div>
               </div>
             )}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 const SPECIALTIES = [
   'Odontología General', 'Implantología', 'Periodoncia', 'Endodoncia',
@@ -18,6 +19,7 @@ export default function LoginPage() {
   const [mode, setMode]         = useState<'login' | 'register'>('login');
   const [role, setRole]         = useState<'professional' | 'student'>('professional');
   const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [name, setName]         = useState('');
@@ -25,13 +27,55 @@ export default function LoginPage() {
   const [country, setCountry]   = useState('');
   const [showPw, setShowPw]     = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError('');
     setLoading(true);
-    setTimeout(() => { window.location.href = '/comunidad'; }, 1200);
+
+    try {
+      if (mode === 'login') {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        window.location.href = '/comunidad';
+      } else {
+        // Registro
+        if (!name.trim()) throw new Error('El nombre es obligatorio.');
+        if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres.');
+
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              display_name: name.trim(),
+              role,
+              specialty: specialty || null,
+              country: country || null,
+            },
+          },
+        });
+        if (error) throw error;
+        window.location.href = '/comunidad';
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Ocurrió un error. Intentá de nuevo.';
+      // Traducir mensajes comunes de Supabase
+      if (msg.includes('Invalid login credentials')) setError('Email o contraseña incorrectos.');
+      else if (msg.includes('User already registered')) setError('Ya existe una cuenta con ese email. Iniciá sesión.');
+      else if (msg.includes('Email not confirmed')) setError('Confirmá tu email antes de ingresar.');
+      else setError(msg);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  /* Shared input class */
+  async function handleGoogle() {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/comunidad` },
+    });
+  }
+
   const inputCls = 'w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-slate-300';
 
   return (
@@ -110,20 +154,20 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* Form area — centered, compact */}
+        {/* Form area */}
         <div className="flex-1 flex items-center justify-center px-5 py-6 sm:px-8">
           <div className="w-full max-w-[420px]">
 
             {/* Mode toggle */}
             <div className="bg-white border border-slate-200 rounded-2xl p-1 flex mb-4 shadow-sm">
               <button
-                onClick={() => setMode('login')}
+                onClick={() => { setMode('login'); setError(''); }}
                 className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition ${mode === 'login' ? 'bg-gradient-to-r from-sky-600 to-teal-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 Iniciar sesión
               </button>
               <button
-                onClick={() => setMode('register')}
+                onClick={() => { setMode('register'); setError(''); }}
                 className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition ${mode === 'register' ? 'bg-gradient-to-r from-sky-600 to-teal-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 Registrarse
@@ -142,8 +186,20 @@ export default function LoginPage() {
                 </p>
               </div>
 
+              {/* Error */}
+              {error && (
+                <div className="mb-3 flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">
+                  <span className="material-symbols-outlined text-red-500 text-[16px] mt-0.5 shrink-0">error</span>
+                  <p className="text-xs text-red-700 font-medium">{error}</p>
+                </div>
+              )}
+
               {/* Google button */}
-              <button className="w-full flex items-center justify-center gap-2.5 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition mb-3 shadow-sm">
+              <button
+                type="button"
+                onClick={handleGoogle}
+                className="w-full flex items-center justify-center gap-2.5 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition mb-3 shadow-sm"
+              >
                 <svg className="size-4 shrink-0" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -294,7 +350,7 @@ export default function LoginPage() {
               {/* Switch mode */}
               <p className="text-center text-xs text-slate-500 mt-3">
                 {mode === 'login' ? '¿No tenés cuenta?' : '¿Ya tenés cuenta?'}{' '}
-                <button onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
+                <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}
                   className="text-primary font-bold hover:underline"
                 >
                   {mode === 'login' ? 'Registrate gratis' : 'Iniciá sesión'}
