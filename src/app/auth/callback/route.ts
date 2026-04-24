@@ -1,15 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import type { EmailOtpType } from '@supabase/supabase-js';
 
-export async function GET(request: Request) {
+export async function GET(request: Request & { cookies: { getAll: () => { name: string; value: string }[] } }) {
   const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get('code');
 
-  if (!code) {
-    return NextResponse.redirect(`${origin}/login?error=oauth`);
-  }
+  const code       = searchParams.get('code');        // OAuth PKCE
+  const token_hash = searchParams.get('token_hash');  // Email confirmation
+  const type       = searchParams.get('type');        // 'email' | 'recovery' | etc.
 
-  // Creamos el redirect primero para poder setear cookies directo en él
   const redirectTo = NextResponse.redirect(`${origin}/comunidad`);
 
   const supabase = createServerClient(
@@ -21,7 +20,6 @@ export async function GET(request: Request) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          // Las cookies van directamente en la respuesta de redirect
           cookiesToSet.forEach(({ name, value, options }) => {
             redirectTo.cookies.set(name, value, options);
           });
@@ -30,11 +28,20 @@ export async function GET(request: Request) {
     }
   );
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-  if (error) {
-    return NextResponse.redirect(`${origin}/login?error=oauth`);
+  // ── Confirmación de email (signup, recovery, etc.) ──
+  if (token_hash && type) {
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash,
+      type: type as EmailOtpType,
+    });
+    if (!error) return redirectTo;
   }
 
-  return redirectTo;
+  // ── OAuth PKCE (Google, etc.) ──
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) return redirectTo;
+  }
+
+  return NextResponse.redirect(`${origin}/login?error=auth`);
 }
