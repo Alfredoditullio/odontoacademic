@@ -16,16 +16,16 @@ const COUNTRIES = [
 ];
 
 export default function LoginPage() {
-  const [mode, setMode]         = useState<'login' | 'register'>('login');
-  const [role, setRole]         = useState<'professional' | 'student'>('professional');
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState('');
-  const [email, setEmail]       = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName]         = useState('');
+  const [mode, setMode]           = useState<'login' | 'register' | 'confirm'>('login');
+  const [role, setRole]           = useState<'professional' | 'student'>('professional');
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState('');
+  const [email, setEmail]         = useState('');
+  const [password, setPassword]   = useState('');
+  const [name, setName]           = useState('');
   const [specialty, setSpecialty] = useState('');
-  const [country, setCountry]   = useState('');
-  const [showPw, setShowPw]     = useState(false);
+  const [country, setCountry]     = useState('');
+  const [showPw, setShowPw]       = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,7 +38,6 @@ export default function LoginPage() {
         if (error) throw error;
         window.location.href = '/comunidad';
       } else {
-        // Registro
         if (!name.trim()) throw new Error('El nombre es obligatorio.');
         if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres.');
 
@@ -46,6 +45,7 @@ export default function LoginPage() {
           email,
           password,
           options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
             data: {
               display_name: name.trim(),
               role,
@@ -55,11 +55,10 @@ export default function LoginPage() {
           },
         });
         if (error) throw error;
-        window.location.href = '/comunidad';
+        setMode('confirm');
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Ocurrió un error. Intentá de nuevo.';
-      // Traducir mensajes comunes de Supabase
       if (msg.includes('Invalid login credentials')) setError('Email o contraseña incorrectos.');
       else if (msg.includes('User already registered')) setError('Ya existe una cuenta con ese email. Iniciá sesión.');
       else if (msg.includes('Email not confirmed')) setError('Confirmá tu email antes de ingresar.');
@@ -67,13 +66,6 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
-  }
-
-  async function handleGoogle() {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
-    });
   }
 
   const inputCls = 'w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-slate-300';
@@ -141,7 +133,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ── Right form panel ── */}
+      {/* ── Right panel ── */}
       <div className="flex-1 flex flex-col h-screen overflow-y-auto">
 
         {/* Mobile logo bar */}
@@ -154,217 +146,208 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* Form area */}
         <div className="flex-1 flex items-center justify-center px-5 py-6 sm:px-8">
           <div className="w-full max-w-[420px]">
 
-            {/* Mode toggle */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-1 flex mb-4 shadow-sm">
-              <button
-                onClick={() => { setMode('login'); setError(''); }}
-                className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition ${mode === 'login' ? 'bg-gradient-to-r from-sky-600 to-teal-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-              >
-                Iniciar sesión
-              </button>
-              <button
-                onClick={() => { setMode('register'); setError(''); }}
-                className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition ${mode === 'register' ? 'bg-gradient-to-r from-sky-600 to-teal-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-              >
-                Registrarse
-              </button>
-            </div>
-
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
-
-              {/* Header */}
-              <div className="mb-4">
-                <h2 className="text-xl font-extrabold text-slate-900">
-                  {mode === 'login' ? 'Bienvenido de vuelta' : 'Crear cuenta gratis'}
-                </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  {mode === 'login' ? 'Ingresá a tu cuenta para continuar.' : 'Únete a la comunidad dental más grande de LATAM.'}
+            {/* ── Pantalla de confirmación ── */}
+            {mode === 'confirm' ? (
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center">
+                <div className="size-16 rounded-full bg-teal-50 flex items-center justify-center mx-auto mb-4">
+                  <span className="material-symbols-outlined text-teal-500 text-[36px]">mark_email_unread</span>
+                </div>
+                <h2 className="text-xl font-extrabold text-slate-900 mb-2">Revisá tu email</h2>
+                <p className="text-sm text-slate-500 leading-relaxed mb-1">
+                  Te enviamos un link de confirmación a
                 </p>
-              </div>
-
-              {/* Error */}
-              {error && (
-                <div className="mb-3 flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">
-                  <span className="material-symbols-outlined text-red-500 text-[16px] mt-0.5 shrink-0">error</span>
-                  <p className="text-xs text-red-700 font-medium">{error}</p>
-                </div>
-              )}
-
-              {/* Google button */}
-              <button
-                type="button"
-                onClick={handleGoogle}
-                className="w-full flex items-center justify-center gap-2.5 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition mb-3 shadow-sm"
-              >
-                <svg className="size-4 shrink-0" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Continuar con Google
-              </button>
-
-              {/* Divider */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex-1 h-px bg-slate-200" />
-                <span className="text-[11px] text-slate-400 font-medium">o con email</span>
-                <div className="flex-1 h-px bg-slate-200" />
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-3">
-
-                {/* Role selector — register only */}
-                {mode === 'register' && (
-                  <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Soy...</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { value: 'professional', icon: 'stethoscope', label: 'Odontólogo/a' },
-                        { value: 'student',      icon: 'school',      label: 'Estudiante'   },
-                      ].map((r) => (
-                        <button
-                          key={r.value}
-                          type="button"
-                          onClick={() => setRole(r.value as 'professional' | 'student')}
-                          className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border-2 text-xs font-bold transition ${
-                            role === r.value
-                              ? 'border-primary bg-primary/5 text-primary'
-                              : 'border-slate-200 text-slate-600 hover:border-slate-300'
-                          }`}
-                        >
-                          <span className="material-symbols-outlined text-[16px]">{r.icon}</span>
-                          {r.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Name — register only */}
-                {mode === 'register' && (
-                  <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Nombre completo *</label>
-                    <input
-                      type="text" value={name} onChange={(e) => setName(e.target.value)}
-                      placeholder={role === 'professional' ? 'Ej: Dra. María González' : 'Ej: Juan López'}
-                      required className={inputCls}
-                    />
-                  </div>
-                )}
-
-                {/* Email */}
-                <div>
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Email *</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[16px] text-slate-400">mail</span>
-                    <input
-                      type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                      placeholder="tu@email.com" required
-                      className={`${inputCls} pl-9`}
-                    />
-                  </div>
-                </div>
-
-                {/* Password */}
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Contraseña *</label>
-                    {mode === 'login' && (
-                      <button type="button" className="text-[11px] text-primary font-semibold hover:underline">
-                        ¿Olvidaste la contraseña?
-                      </button>
-                    )}
-                  </div>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[16px] text-slate-400">lock</span>
-                    <input
-                      type={showPw ? 'text' : 'password'} value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder={mode === 'register' ? 'Mín. 8 caracteres' : '••••••••'}
-                      required className={`${inputCls} pl-9 pr-10`}
-                    />
-                    <button type="button" onClick={() => setShowPw(!showPw)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">{showPw ? 'visibility_off' : 'visibility'}</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Specialty + Country — register only */}
-                {mode === 'register' && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">
-                        {role === 'student' ? 'Interés' : 'Especialidad'}
-                      </label>
-                      <select value={specialty} onChange={(e) => setSpecialty(e.target.value)}
-                        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700"
-                      >
-                        <option value="">Seleccioná...</option>
-                        {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">País</label>
-                      <select value={country} onChange={(e) => setCountry(e.target.value)}
-                        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700"
-                      >
-                        <option value="">País...</option>
-                        {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                {/* Terms — register only */}
-                {mode === 'register' && (
-                  <p className="text-[10px] text-slate-400 leading-relaxed">
-                    Al registrarte aceptás nuestros{' '}
-                    <Link href="/terminos" className="text-primary font-semibold hover:underline">Términos</Link>
-                    {' '}y la{' '}
-                    <Link href="/privacidad" className="text-primary font-semibold hover:underline">Política de privacidad</Link>.
-                  </p>
-                )}
-
-                {/* Submit */}
+                <p className="text-sm font-bold text-slate-800 mb-4">{email}</p>
+                <p className="text-xs text-slate-400 leading-relaxed mb-6">
+                  Hacé click en el link del email para activar tu cuenta y acceder a la comunidad. Revisá también la carpeta de spam.
+                </p>
                 <button
-                  type="submit" disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-sm disabled:opacity-70"
+                  onClick={() => { setMode('login'); setError(''); }}
+                  className="w-full flex items-center justify-center gap-2 border border-slate-200 rounded-xl py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition"
                 >
-                  {loading ? (
-                    <><span className="material-symbols-outlined text-[17px] animate-spin">progress_activity</span>
-                    {mode === 'login' ? 'Ingresando...' : 'Creando cuenta...'}</>
-                  ) : (
-                    <><span className="material-symbols-outlined text-[17px]">{mode === 'login' ? 'login' : 'person_add'}</span>
-                    {mode === 'login' ? 'Iniciar sesión' : 'Crear mi cuenta gratis'}</>
+                  <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+                  Volver al inicio de sesión
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Mode toggle */}
+                <div className="bg-white border border-slate-200 rounded-2xl p-1 flex mb-4 shadow-sm">
+                  <button
+                    onClick={() => { setMode('login'); setError(''); }}
+                    className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition ${mode === 'login' ? 'bg-gradient-to-r from-sky-600 to-teal-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                  >
+                    Iniciar sesión
+                  </button>
+                  <button
+                    onClick={() => { setMode('register'); setError(''); }}
+                    className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition ${mode === 'register' ? 'bg-gradient-to-r from-sky-600 to-teal-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                  >
+                    Registrarse
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+                  <div className="mb-4">
+                    <h2 className="text-xl font-extrabold text-slate-900">
+                      {mode === 'login' ? 'Bienvenido de vuelta' : 'Crear cuenta gratis'}
+                    </h2>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {mode === 'login' ? 'Ingresá a tu cuenta para continuar.' : 'Únete a la comunidad dental más grande de LATAM.'}
+                    </p>
+                  </div>
+
+                  {error && (
+                    <div className="mb-3 flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">
+                      <span className="material-symbols-outlined text-red-500 text-[16px] mt-0.5 shrink-0">error</span>
+                      <p className="text-xs text-red-700 font-medium">{error}</p>
+                    </div>
                   )}
-                </button>
-              </form>
 
-              {/* Switch mode */}
-              <p className="text-center text-xs text-slate-500 mt-3">
-                {mode === 'login' ? '¿No tenés cuenta?' : '¿Ya tenés cuenta?'}{' '}
-                <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}
-                  className="text-primary font-bold hover:underline"
-                >
-                  {mode === 'login' ? 'Registrate gratis' : 'Iniciá sesión'}
-                </button>
-              </p>
-            </div>
+                  <form onSubmit={handleSubmit} className="space-y-3">
 
-            <div className="text-center mt-4">
-              <Link href="/" className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 transition">
-                <span className="material-symbols-outlined text-[14px]">arrow_back</span>
-                Volver al inicio
-              </Link>
-            </div>
+                    {mode === 'register' && (
+                      <div>
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Soy...</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: 'professional', icon: 'stethoscope', label: 'Odontólogo/a' },
+                            { value: 'student',      icon: 'school',      label: 'Estudiante'   },
+                          ].map((r) => (
+                            <button
+                              key={r.value}
+                              type="button"
+                              onClick={() => setRole(r.value as 'professional' | 'student')}
+                              className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border-2 text-xs font-bold transition ${
+                                role === r.value
+                                  ? 'border-primary bg-primary/5 text-primary'
+                                  : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                              }`}
+                            >
+                              <span className="material-symbols-outlined text-[16px]">{r.icon}</span>
+                              {r.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
+                    {mode === 'register' && (
+                      <div>
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Nombre completo *</label>
+                        <input
+                          type="text" value={name} onChange={(e) => setName(e.target.value)}
+                          placeholder={role === 'professional' ? 'Ej: Dra. María González' : 'Ej: Juan López'}
+                          required className={inputCls}
+                        />
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Email *</label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[16px] text-slate-400">mail</span>
+                        <input
+                          type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                          placeholder="tu@email.com" required
+                          className={`${inputCls} pl-9`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Contraseña *</label>
+                        {mode === 'login' && (
+                          <button type="button" className="text-[11px] text-primary font-semibold hover:underline">
+                            ¿Olvidaste la contraseña?
+                          </button>
+                        )}
+                      </div>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[16px] text-slate-400">lock</span>
+                        <input
+                          type={showPw ? 'text' : 'password'} value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder={mode === 'register' ? 'Mín. 8 caracteres' : '••••••••'}
+                          required className={`${inputCls} pl-9 pr-10`}
+                        />
+                        <button type="button" onClick={() => setShowPw(!showPw)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">{showPw ? 'visibility_off' : 'visibility'}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {mode === 'register' && (
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">
+                            {role === 'student' ? 'Interés' : 'Especialidad'}
+                          </label>
+                          <select value={specialty} onChange={(e) => setSpecialty(e.target.value)}
+                            className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700"
+                          >
+                            <option value="">Seleccioná...</option>
+                            {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">País</label>
+                          <select value={country} onChange={(e) => setCountry(e.target.value)}
+                            className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700"
+                          >
+                            <option value="">País...</option>
+                            {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                    )}
+
+                    {mode === 'register' && (
+                      <p className="text-[10px] text-slate-400 leading-relaxed">
+                        Al registrarte aceptás nuestros{' '}
+                        <Link href="/terminos" className="text-primary font-semibold hover:underline">Términos</Link>
+                        {' '}y la{' '}
+                        <Link href="/privacidad" className="text-primary font-semibold hover:underline">Política de privacidad</Link>.
+                      </p>
+                    )}
+
+                    <button
+                      type="submit" disabled={loading}
+                      className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-sm disabled:opacity-70"
+                    >
+                      {loading ? (
+                        <><span className="material-symbols-outlined text-[17px] animate-spin">progress_activity</span>
+                        {mode === 'login' ? 'Ingresando...' : 'Creando cuenta...'}</>
+                      ) : (
+                        <><span className="material-symbols-outlined text-[17px]">{mode === 'login' ? 'login' : 'person_add'}</span>
+                        {mode === 'login' ? 'Iniciar sesión' : 'Crear mi cuenta gratis'}</>
+                      )}
+                    </button>
+                  </form>
+
+                  <p className="text-center text-xs text-slate-500 mt-3">
+                    {mode === 'login' ? '¿No tenés cuenta?' : '¿Ya tenés cuenta?'}{' '}
+                    <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}
+                      className="text-primary font-bold hover:underline"
+                    >
+                      {mode === 'login' ? 'Registrate gratis' : 'Iniciá sesión'}
+                    </button>
+                  </p>
+                </div>
+
+                <div className="text-center mt-4">
+                  <Link href="/" className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 transition">
+                    <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+                    Volver al inicio
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
