@@ -26,6 +26,7 @@ export default function LoginPage() {
   const [specialty, setSpecialty] = useState('');
   const [country, setCountry]     = useState('');
   const [showPw, setShowPw]       = useState(false);
+  const [newsletter, setNewsletter] = useState(true);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,6 +52,7 @@ export default function LoginPage() {
               role,
               specialty: specialty || null,
               country: country || null,
+              newsletter_subscribed: newsletter,
             },
           },
         });
@@ -305,6 +307,25 @@ export default function LoginPage() {
                           </select>
                         </div>
                       </div>
+                    )}
+
+                    {/* Newsletter checkbox — register only */}
+                    {mode === 'register' && (
+                      <label className="flex items-start gap-2.5 bg-sky-50/50 border border-sky-100 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-sky-50 transition">
+                        <input
+                          type="checkbox"
+                          checked={newsletter}
+                          onChange={(e) => setNewsletter(e.target.checked)}
+                          className="mt-0.5 size-4 rounded border-slate-300 text-primary focus:ring-primary/30 cursor-pointer shrink-0"
+                        />
+                        <span className="text-[11px] text-slate-600 leading-snug">
+                          <span className="font-bold text-slate-800 flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[13px] text-primary">mail</span>
+                            Quiero recibir la newsletter
+                          </span>
+                          <span className="block text-slate-500 mt-0.5">Novedades del mundo dental, casos clínicos y recursos gratis. Podés desuscribirte cuando quieras.</span>
+                        </span>
+                      </label>
                     )}
 
                     {mode === 'register' && (

@@ -26,10 +26,11 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const isCommunityRoute = request.nextUrl.pathname.startsWith('/comunidad');
-  const isLoginRoute = request.nextUrl.pathname === '/login';
+  const isAdminRoute     = request.nextUrl.pathname.startsWith('/admin');
+  const isLoginRoute     = request.nextUrl.pathname === '/login';
 
-  // Si intenta acceder a /comunidad sin sesión → /login
-  if (isCommunityRoute && !user) {
+  // Si intenta acceder a /comunidad o /admin sin sesión → /login
+  if ((isCommunityRoute || isAdminRoute) && !user) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
@@ -42,5 +43,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/comunidad/:path*', '/login'],
+  matcher: ['/comunidad/:path*', '/admin/:path*', '/login'],
 };
