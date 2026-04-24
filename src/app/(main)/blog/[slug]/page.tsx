@@ -222,7 +222,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span className="material-symbols-outlined text-[17px]">arrow_back</span>
             Más artículos
           </Link>
-          <Link href="/comunidad" className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition">
+          <Link href="/login" className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition">
             <span className="material-symbols-outlined text-[17px]">groups</span>
             Debatir en la Comunidad
           </Link>

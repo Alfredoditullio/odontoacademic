@@ -71,7 +71,7 @@ export default function HomePage() {
             {/* CTAs */}
             <div className="animate-fade-in-up flex flex-col sm:flex-row gap-3" style={{ animationDelay: '0.45s' }}>
               <Link
-                href="/comunidad"
+                href="/login"
                 className="group inline-flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start bg-gradient-to-r from-sky-500 to-teal-500 text-white px-8 py-4 rounded-xl text-base font-bold shadow-lg shadow-sky-500/25 hover:shadow-xl hover:shadow-sky-500/30 transition-all hover:-translate-y-0.5"
               >
                 Unirme a la Comunidad
@@ -566,7 +566,7 @@ export default function HomePage() {
           {/* CTA */}
           <div className="text-center mt-12">
             <Link
-              href="/comunidad"
+              href="/login"
               className="group inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-teal-500 text-white px-8 py-4 rounded-xl text-base font-bold shadow-lg shadow-sky-500/25 hover:shadow-xl hover:shadow-sky-500/30 transition-all hover:-translate-y-0.5"
             >
               Explorar la Comunidad
@@ -650,7 +650,7 @@ export default function HomePage() {
                   Conectá con colegas, compartí tu experiencia, aprendé de los mejores y accedé a recursos exclusivos. Tu próximo colega está a un click.
                 </p>
                 <Link
-                  href="/comunidad"
+                  href="/login"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-teal-500 text-white px-8 py-4 rounded-xl text-base font-bold shadow-lg shadow-sky-500/25 hover:shadow-xl transition-all hover:-translate-y-0.5"
                 >
                   Crear mi cuenta gratis

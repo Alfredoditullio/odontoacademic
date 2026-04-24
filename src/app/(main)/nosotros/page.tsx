@@ -232,7 +232,7 @@ export default function NosotrosPage() {
                 Siempre buscamos profesionales apasionados. Si querés contribuir a la educación dental en LATAM, escribinos.
               </p>
               <Link
-                href="/comunidad"
+                href="/login"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-teal-500 text-white px-8 py-4 rounded-xl text-base font-bold shadow-lg shadow-sky-500/25 hover:shadow-xl transition-all hover:-translate-y-0.5"
               >
                 Contactanos

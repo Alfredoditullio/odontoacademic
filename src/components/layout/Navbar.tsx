@@ -46,7 +46,7 @@ export function Navbar() {
           : 'bg-white/80 backdrop-blur-md border-b border-slate-100/50'
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
@@ -116,7 +116,7 @@ export function Navbar() {
           {/* Right side */}
           <div className="flex items-center gap-3">
             <Link
-              href="/comunidad"
+              href="/login"
               className="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 shadow-sm hover:shadow-md transition-all"
             >
               <span className="material-symbols-outlined text-[18px]">groups</span>
@@ -175,7 +175,7 @@ export function Navbar() {
             )}
             <div className="pt-3 px-4">
               <Link
-                href="/comunidad"
+                href="/login"
                 className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-sky-600 to-teal-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold"
               >
                 <span className="material-symbols-outlined text-[18px]">groups</span>
