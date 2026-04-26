@@ -316,9 +316,17 @@ export default function HomePage() {
                       <p className="text-sm text-white/60">Streaming semanal para la comunidad dental de LATAM</p>
                     </div>
                   </div>
-                  <p className="text-white/75 leading-relaxed max-w-xl">
+                  <p className="text-white/75 leading-relaxed max-w-xl mb-4">
                     Casos clínicos en vivo, debates, novedades de IA dental, mentoría abierta para estudiantes e invitados especiales de toda Latinoamérica. Todo en vivo, cada semana, con la comunidad participando en tiempo real.
                   </p>
+                  {/* Caso de la Semana */}
+                  <div className="inline-flex items-center gap-2.5 bg-rose-500/20 border border-rose-400/30 rounded-xl px-3.5 py-2">
+                    <span className="material-symbols-outlined text-[18px] text-rose-300" style={{ fontVariationSettings: "'FILL' 1" }}>how_to_vote</span>
+                    <div>
+                      <p className="text-xs font-black text-rose-200 leading-tight">Caso de la Semana</p>
+                      <p className="text-[11px] text-white/50 leading-snug">La comunidad vota el caso que se presenta en el próximo streaming en vivo</p>
+                    </div>
+                  </div>
                 </div>
                 <div className="shrink-0 grid grid-cols-2 gap-2.5 w-full sm:w-auto">
                   {[
@@ -352,7 +360,7 @@ export default function HomePage() {
                 <p className="text-white/80 leading-relaxed mb-6 max-w-lg">
                   Publicá tus casos, pedí segunda opinión a especialistas o abrí un debate. Si marcás tu caso como "Necesito ayuda" y elegís la especialidad, los especialistas registrados reciben una notificación directa.
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mb-5">
                   {[
                     { label: 'Pido ayuda', color: 'bg-amber-400/20 text-amber-200' },
                     { label: 'Caso resuelto', color: 'bg-emerald-400/20 text-emerald-200' },
@@ -361,6 +369,18 @@ export default function HomePage() {
                   ].map((tag) => (
                     <span key={tag.label} className={`text-xs font-bold px-3 py-1 rounded-full ${tag.color}`}>{tag.label}</span>
                   ))}
+                </div>
+                {/* Puntos & insignias */}
+                <div className="bg-white/10 backdrop-blur border border-white/15 rounded-xl px-4 py-3 flex items-center gap-4">
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {['military_tech', 'emoji_events', 'star'].map((ic, i) => (
+                      <span key={i} className={`material-symbols-outlined text-[22px] ${['text-amber-300','text-yellow-300','text-orange-300'][i]}`} style={{ fontVariationSettings: "'FILL' 1" }}>{ic}</span>
+                    ))}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-white leading-tight">Sistema de puntos e insignias</p>
+                    <p className="text-[11px] text-white/60 leading-snug mt-0.5">Ganás puntos por cada caso que publicás, respondés o resolvés. Desbloqueá insignias según tu especialidad y nivel de participación.</p>
+                  </div>
                 </div>
               </div>
             </div>

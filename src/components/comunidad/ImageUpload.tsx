@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 
 interface ImageUploadProps {
   files: File[];
@@ -25,23 +25,19 @@ export function ImageUpload({
   const inputRef   = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 
-  // Revoke object URLs when files change or component unmounts
-  const urlMapRef = useRef<Map<File, string>>(new Map());
-
-  function getUrl(file: File): string {
-    if (!urlMapRef.current.has(file)) {
-      urlMapRef.current.set(file, URL.createObjectURL(file));
-    }
-    return urlMapRef.current.get(file)!;
-  }
+  // URLs preview: derivadas de `files` con useMemo (render puro, sin tocar refs).
+  // Cada cambio en `files` recalcula. Las URLs anteriores se revocan en el
+  // cleanup del useEffect que sigue, evitando memory leaks.
+  const urls = useMemo(
+    () => files.map((file) => URL.createObjectURL(file)),
+    [files],
+  );
 
   useEffect(() => {
-    const currentMap = urlMapRef.current;
     return () => {
-      currentMap.forEach((url) => URL.revokeObjectURL(url));
-      currentMap.clear();
+      urls.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, []);
+  }, [urls]);
 
   function addFiles(incoming: FileList | null) {
     if (!incoming) return;
@@ -51,9 +47,6 @@ export function ImageUpload({
   }
 
   function remove(index: number) {
-    const removed = files[index];
-    const url = urlMapRef.current.get(removed);
-    if (url) { URL.revokeObjectURL(url); urlMapRef.current.delete(removed); }
     onChange(files.filter((_, i) => i !== index));
   }
 
@@ -98,10 +91,10 @@ export function ImageUpload({
     <div>
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
         {files.map((file, i) => (
-          <div key={i} className="relative group aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
+          <div key={`${file.name}-${file.lastModified}-${i}`} className="relative group aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={getUrl(file)}
+              src={urls[i]}
               alt={`Preview ${i + 1}`}
               className="w-full h-full object-cover"
             />

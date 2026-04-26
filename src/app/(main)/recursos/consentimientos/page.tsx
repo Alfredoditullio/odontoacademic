@@ -151,16 +151,6 @@ const COMPLEMENTARIOS = [
   },
 ];
 
-const CATEGORY_COLORS: Record<string, string> = {
-  'Cirugía Oral':    'text-red-600    bg-red-50    border-red-200',
-  'Implantología':   'text-sky-700    bg-sky-50    border-sky-200',
-  'Ortopedia':       'text-indigo-700 bg-indigo-50 border-indigo-200',
-  'Endodoncia':      'text-teal-700   bg-teal-50   border-teal-200',
-  'Periodoncia':     'text-emerald-700 bg-emerald-50 border-emerald-200',
-  'Prótesis':        'text-violet-700 bg-violet-50 border-violet-200',
-  'Odontopediatría': 'text-cyan-700   bg-cyan-50   border-cyan-200',
-  'Radiología':      'text-slate-700  bg-slate-50  border-slate-200',
-};
 
 export default function ConsentimientosPage() {
   return (

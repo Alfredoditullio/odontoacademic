@@ -62,8 +62,6 @@ export function StudentPostModal({ onClose }: Props) {
     return () => { document.body.style.overflow = ''; };
   }, []);
 
-  const selectedType = POST_TYPES.find((t) => t.value === type)!;
-
   function toggleTag(tag: string) {
     setTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
   }

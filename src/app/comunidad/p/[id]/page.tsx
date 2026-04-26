@@ -1,60 +1,38 @@
-'use client';
+/**
+ * Post detail. Server Component:
+ *  - Fetch del post + comentarios + estado de like del usuario en SSR.
+ *  - Render del header / body / metadata es estático (SSR).
+ *  - <PostInteractions> es un client island con la lógica de likes/comments
+ *    + suscripción Realtime al canal `post:${id}:comments`.
+ */
 
-import { useState, use } from 'react';
 import Link from 'next/link';
-import { MOCK_POSTS, MOCK_COMMENTS } from '@/data/mock-community';
+import { notFound } from 'next/navigation';
+import {
+  getPostById,
+  getCommentsForPost,
+  getLikedPostIdsForCurrentUser,
+  getPollForPost,
+} from '@/lib/queries/community';
 import { timeAgo, initials } from '@/lib/utils';
-import type { MarketMeta, CommentWithAuthor } from '@/lib/types';
+import { PostLikeFooter, PostCommentsSection } from '@/components/comunidad/PostInteractions';
+import { PollCard } from '@/components/comunidad/PollCard';
+import type { MarketMeta } from '@/lib/types';
 
-const ME = { user_id: 'me', handle: 'dr-rodriguez', display_name: 'Dr. Martín Rodríguez', role: 'member' as const };
+// El post detail no se cachea agresivamente (puede tener comments en vivo).
+export const dynamic = 'force-dynamic';
 
-export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const post = MOCK_POSTS.find((p) => p.id === id);
+export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(post?.like_count ?? 0);
-  const [commentText, setCommentText] = useState('');
-  const [localComments, setLocalComments] = useState<CommentWithAuthor[]>(
-    post ? MOCK_COMMENTS.filter((c) => c.post_id === id) : []
-  );
+  const [post, comments, likedSet, poll] = await Promise.all([
+    getPostById(id),
+    getCommentsForPost(id),
+    getLikedPostIdsForCurrentUser([id]),
+    getPollForPost(id),
+  ]);
 
-  if (!post) {
-    return (
-      <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-        <p className="text-slate-500">Post no encontrado</p>
-        <Link href="/comunidad" className="text-primary font-semibold mt-4 inline-block">Volver al feed</Link>
-      </div>
-    );
-  }
-
-  function handleLike() {
-    setLiked((prev) => !prev);
-    setLikeCount((prev) => liked ? prev - 1 : prev + 1);
-  }
-
-  function handleComment() {
-    const text = commentText.trim();
-    if (!text) return;
-    const newComment: CommentWithAuthor = {
-      id: `c-local-${Date.now()}`,
-      post_id: id,
-      author_id: ME.user_id,
-      body: text,
-      is_deleted: false,
-      created_at: new Date().toISOString(),
-      author: {
-        ...ME,
-        avatar_url: null, bio: null, specialty: null, country: 'Argentina',
-        city: null, phone: null, website: null, accepts_referrals: false,
-        reputation_points: 450, follower_count: 128, following_count: 45,
-        rules_accepted_at: new Date().toISOString(),
-        created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-      },
-    };
-    setLocalComments((prev) => [...prev, newComment]);
-    setCommentText('');
-  }
+  if (!post) notFound();
 
   return (
     <div className="space-y-4">
@@ -94,7 +72,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         {post.category.slug === 'mercado' && post.metadata && (() => {
           const m = post.metadata as Partial<MarketMeta>;
           const listingLabels: Record<string, string> = { sell: 'Vendo', buy: 'Compro', trade: 'Permuto' };
-          const condLabels: Record<string, string> = { new: 'Nuevo', like_new: 'Como nuevo', good: 'Buen estado', fair: 'Uso visible' };
+          const condLabels:    Record<string, string> = { new: 'Nuevo', like_new: 'Como nuevo', good: 'Buen estado', fair: 'Uso visible' };
           return (
             <div className="flex flex-wrap items-center gap-3 mb-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
               {m.listing_type && (
@@ -124,88 +102,36 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
         <div className="prose-post text-slate-700 whitespace-pre-wrap leading-relaxed">{post.body}</div>
 
-        <footer className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-4">
-          <button
-            onClick={handleLike}
-            className={`inline-flex items-center gap-1.5 text-sm font-semibold transition ${
-              liked ? 'text-rose-500' : 'text-slate-500 hover:text-rose-500'
-            }`}
-          >
-            <span
-              className="material-symbols-outlined text-[20px]"
-              style={{ fontVariationSettings: liked ? "'FILL' 1" : "'FILL' 0" }}
-            >
-              favorite
-            </span>
-            {likeCount}
-          </button>
-          <span className="inline-flex items-center gap-1.5 text-sm text-slate-500">
-            <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-            {localComments.length} comentarios
-          </span>
-        </footer>
+        {/* Encuesta (si el post tiene una asociada) */}
+        {poll && <PollCard poll={poll} postId={post.id} />}
+
+        {/* Attachments (imágenes subidas) */}
+        {post.attachment_urls && post.attachment_urls.length > 0 && (
+          <div className={`mt-5 grid gap-2 ${
+            post.attachment_urls.length === 1 ? 'grid-cols-1'
+              : post.attachment_urls.length === 2 ? 'grid-cols-2'
+              : 'grid-cols-2 sm:grid-cols-3'
+          }`}>
+            {post.attachment_urls.map((url, i) => (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-100 hover:opacity-90 transition">
+                <img src={url} alt={`Adjunto ${i + 1}`} className="size-full object-cover" />
+              </a>
+            ))}
+          </div>
+        )}
+
+        {/* Like footer (client island, optimistic) */}
+        <PostLikeFooter
+          postId={post.id}
+          initialLikeCount={post.like_count}
+          initialLiked={likedSet.has(post.id)}
+          initialCommentCount={post.comment_count}
+        />
       </article>
 
-      {/* Comments */}
-      <section className="bg-white rounded-xl border border-slate-200 p-6">
-        <h2 className="font-bold text-slate-900 mb-4">Comentarios</h2>
-
-        {/* Comment form */}
-        <div className="flex gap-3 mb-6">
-          <div className="size-9 rounded-full bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center font-bold text-white text-xs shrink-0">
-            MR
-          </div>
-          <div className="flex-1">
-            <textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleComment(); }}
-              placeholder="Escribí un comentario... (Cmd+Enter para enviar)"
-              rows={3}
-              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none placeholder:text-slate-300"
-            />
-            <div className="flex justify-end mt-2">
-              <button
-                onClick={handleComment}
-                disabled={!commentText.trim()}
-                className="inline-flex items-center gap-1.5 bg-primary text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-primary/90 transition disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <span className="material-symbols-outlined text-[16px]">send</span>
-                Comentar
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          {localComments.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-4">Todavía no hay comentarios. Sé el primero.</p>
-          ) : (
-            localComments.map((c) => (
-              <div key={c.id} className="flex gap-3">
-                <Link
-                  href={`/comunidad/u/${c.author.handle}`}
-                  className="size-9 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600 text-xs flex-shrink-0 hover:bg-slate-300 transition"
-                >
-                  {initials(c.author.display_name)}
-                </Link>
-                <div className="flex-1 min-w-0 bg-slate-50 rounded-xl px-4 py-3">
-                  <div className="flex items-center gap-2 text-xs mb-1">
-                    <Link href={`/comunidad/u/${c.author.handle}`} className="font-bold text-slate-900 hover:underline">
-                      {c.author.display_name}
-                    </Link>
-                    {c.author.specialty && (
-                      <span className="text-slate-400">· {c.author.specialty}</span>
-                    )}
-                    <span className="text-slate-400">{timeAgo(c.created_at)}</span>
-                  </div>
-                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{c.body}</p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
+      {/* Sección de comentarios con realtime (client island con suscripción) */}
+      <PostCommentsSection postId={post.id} initialComments={comments} />
 
       <div className="text-center pb-4">
         <Link href="/comunidad" className="text-sm text-primary font-semibold hover:underline">

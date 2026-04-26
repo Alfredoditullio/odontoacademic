@@ -25,16 +25,21 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
 
+  // Cerramos menús al cambiar de ruta usando "Adjusting state during render"
+  // (https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes).
+  // Esto evita el render extra que provoca setState dentro de useEffect.
+  const [previousPathname, setPreviousPathname] = useState(pathname);
+  if (pathname !== previousPathname) {
+    setPreviousPathname(pathname);
+    setMobileOpen(false);
+    setResourcesOpen(false);
+  }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  useEffect(() => {
-    setMobileOpen(false);
-    setResourcesOpen(false);
-  }, [pathname]);
 
   const isActive = (href: string) => pathname === href || (href !== '/' && pathname.startsWith(href));
 

@@ -21,7 +21,6 @@ export default async function CampaignDetail({ params }: { params: Promise<{ id:
     .order('sent_at', { ascending: false })
     .limit(100);
 
-  const sentOk   = sends?.filter((s) => s.status === 'sent').length ?? 0;
   const failed   = sends?.filter((s) => s.status === 'failed').length ?? 0;
   const openRate = campaign.sent_count > 0 ? Math.round(campaign.open_count / campaign.sent_count * 100) : 0;
 

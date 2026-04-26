@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, startTransition, useTransition } from 'react';
+import { uploadCommunityImage } from '@/lib/storage/community-images';
+import { updateMyProfile } from '@/lib/actions/profile';
 
 /* ─── Static data ─── */
 const SPECIALTIES = [
@@ -109,22 +111,42 @@ function SectionTitle({ icon, children, sub }: { icon: string; children: React.R
   );
 }
 
-function SaveBar({ onSave, saved }: { onSave: () => void; saved: boolean }) {
+function SaveBar({
+  onSave,
+  saved,
+  pending = false,
+  error = null,
+}: {
+  onSave: () => void;
+  saved: boolean;
+  pending?: boolean;
+  error?: string | null;
+}) {
   return (
-    <div className="flex items-center justify-end gap-3 pt-5 mt-5 border-t border-slate-100">
-      {saved && (
-        <span className="text-sm text-emerald-600 font-semibold flex items-center gap-1 animate-fade-in-up">
-          <span className="material-symbols-outlined text-[17px]">check_circle</span>
-          Guardado
-        </span>
+    <div className="pt-5 mt-5 border-t border-slate-100">
+      {error && (
+        <div className="mb-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2">
+          {error}
+        </div>
       )}
-      <button
-        onClick={onSave}
-        className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-sm"
-      >
-        <span className="material-symbols-outlined text-[18px]">save</span>
-        Guardar cambios
-      </button>
+      <div className="flex items-center justify-end gap-3">
+        {saved && !error && (
+          <span className="text-sm text-emerald-600 font-semibold flex items-center gap-1 animate-fade-in-up">
+            <span className="material-symbols-outlined text-[17px]">check_circle</span>
+            Guardado
+          </span>
+        )}
+        <button
+          onClick={onSave}
+          disabled={pending}
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-sm disabled:opacity-50"
+        >
+          <span className={`material-symbols-outlined text-[18px] ${pending ? 'animate-spin' : ''}`}>
+            {pending ? 'progress_activity' : 'save'}
+          </span>
+          {pending ? 'Guardando...' : 'Guardar cambios'}
+        </button>
+      </div>
     </div>
   );
 }
@@ -151,36 +173,105 @@ export default function ConfiguracionPage() {
   const [pwSaved, setPwSaved] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // Hidratación desde localStorage al montar. Aplicamos los 4 setStates dentro
+  // de startTransition para que React los agrupe en un único render commit,
+  // evitando el cascading render que la regla react-hooks/set-state-in-effect
+  // intenta prevenir. localStorage es un sistema externo legítimo a sincronizar
+  // con useEffect.
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(LS_KEY);
-      if (raw) {
-        const data = JSON.parse(raw);
-        if (data.profile)  setProfile({ ...DEFAULT_PROFILE, ...data.profile });
-        if (data.notif)    setNotif({ ...DEFAULT_NOTIF, ...data.notif });
-        if (data.privacy)  setPrivacy({ ...DEFAULT_PRIVACY, ...data.privacy });
-        if (data.avatar)   setAvatarPreview(data.avatar);
-        setBioLen((data.profile?.bio ?? '').length);
-      }
-    } catch { /* ignore */ }
+    let raw: string | null = null;
+    try { raw = localStorage.getItem(LS_KEY); } catch { return; }
+    if (!raw) return;
+
+    let data: {
+      profile?: Partial<ProfileData>;
+      notif?:   Partial<NotifData>;
+      privacy?: Partial<PrivacyData>;
+      avatar?:  string;
+    } | null = null;
+    try { data = JSON.parse(raw); } catch { return; }
+    if (!data) return;
+
+    startTransition(() => {
+      if (data.profile)  setProfile({ ...DEFAULT_PROFILE, ...data.profile });
+      if (data.notif)    setNotif({ ...DEFAULT_NOTIF, ...data.notif });
+      if (data.privacy)  setPrivacy({ ...DEFAULT_PRIVACY, ...data.privacy });
+      if (data.avatar)   setAvatarPreview(data.avatar);
+      setBioLen((data.profile?.bio ?? '').length);
+    });
   }, []);
+
+  // Estado de upload del avatar y de save al server
+  const [savePending, startSaveTransition] = useTransition();
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);   // URL real en Storage si fue uploadeado
 
   function persist(p = profile, n = notif, pr = privacy, av = avatarPreview) {
     localStorage.setItem(LS_KEY, JSON.stringify({ profile: p, notif: n, privacy: pr, avatar: av }));
   }
 
-  function save() { persist(); setSaved(true); setTimeout(() => setSaved(false), 3000); }
+  function save() {
+    persist();
+    setSaveError(null);
+    // Guarda local inmediato (UX) + persiste a Supabase en background.
+    startSaveTransition(async () => {
+      const res = await updateMyProfile({
+        display_name:      profile.displayName,
+        handle:            profile.handle.trim() || null,
+        bio:               profile.bio || null,
+        specialty:         profile.specialty || null,
+        country:           profile.country || null,
+        city:              profile.city || null,
+        phone:             profile.phone || null,
+        website:           profile.website || null,
+        accepts_referrals: profile.acceptsReferrals,
+        avatar_color:      profile.avatarColor,
+        avatar_url:        avatarUrl ?? undefined,    // solo persistimos si hubo upload nuevo
+        role:              profile.accountRole,
+        study_year:        profile.studyYear ? parseInt(profile.studyYear) || null : null,
+        university:        profile.university || null,
+      });
+      if (!res.ok) {
+        setSaveError(res.error);
+        return;
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    });
+  }
 
   function setP<K extends keyof ProfileData>(k: K, v: ProfileData[K]) {
     setProfile((prev) => ({ ...prev, [k]: v }));
   }
 
-  function handleAvatarFile(e: React.ChangeEvent<HTMLInputElement>) {
+  // Sube el archivo a Storage y actualiza preview + URL remota.
+  // El persist final a `profiles.avatar_url` sucede al hacer click en "Guardar cambios".
+  async function handleAvatarFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    setAvatarUploading(true);
+    setSaveError(null);
+
+    // Preview inmediato con FileReader (sin esperar el upload).
     const reader = new FileReader();
     reader.onload = (ev) => setAvatarPreview(ev.target?.result as string);
     reader.readAsDataURL(file);
+
+    const upload = await uploadCommunityImage(file, { folder: 'avatars' });
+    setAvatarUploading(false);
+    if (!upload.ok) {
+      setSaveError(`No se pudo subir el avatar: ${upload.error}`);
+      setAvatarPreview(null);
+      setAvatarUrl(null);
+      return;
+    }
+    // Si el upload fue OK, ya tenemos URL pública. Reemplazamos el preview por la URL real
+    // así no queda persistido el data-url enorme en localStorage.
+    setAvatarPreview(upload.url);
+    setAvatarUrl(upload.url);
+    // Reset del input para permitir re-subir el mismo file
+    e.target.value = '';
   }
 
   function initials(name: string) {
@@ -474,7 +565,7 @@ export default function ConfiguracionPage() {
                 </div>
               </div>
 
-              <SaveBar onSave={save} saved={saved} />
+              <SaveBar onSave={save} saved={saved} pending={savePending || avatarUploading} error={saveError} />
             </div>
           )}
 
@@ -646,7 +737,7 @@ export default function ConfiguracionPage() {
                 </div>
               </div>
 
-              <SaveBar onSave={save} saved={saved} />
+              <SaveBar onSave={save} saved={saved} pending={savePending || avatarUploading} error={saveError} />
             </div>
           )}
 
@@ -690,7 +781,7 @@ export default function ConfiguracionPage() {
                 ))}
               </div>
 
-              <SaveBar onSave={save} saved={saved} />
+              <SaveBar onSave={save} saved={saved} pending={savePending || avatarUploading} error={saveError} />
             </div>
           )}
 

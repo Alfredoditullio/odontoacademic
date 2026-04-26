@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useTransition } from 'react';
 import Link from 'next/link';
 import type { PostWithAuthor } from '@/lib/types';
 import { timeAgo, initials } from '@/lib/utils';
 import { ReportModal } from './ReportModal';
+import { toggleLike } from '@/lib/actions/community';
 
 const POST_TYPE_BADGE: Record<string, { label: string; icon: string; className: string }> = {
   help:     { label: 'Pido ayuda', icon: 'help',         className: 'bg-amber-100 text-amber-700'   },
@@ -135,15 +136,36 @@ function PostMenu({ postTitle }: { postTitle: string }) {
   );
 }
 
-export function PostCard({ post }: { post: PostWithAuthor }) {
-  const [liked, setLiked] = useState(false);
+interface PostCardProps {
+  post: PostWithAuthor;
+  /** Si el usuario actual ya likeó este post (precalculado server-side). */
+  initialLiked?: boolean;
+}
+
+export function PostCard({ post, initialLiked = false }: PostCardProps) {
+  const [liked, setLiked]         = useState(initialLiked);
   const [likeCount, setLikeCount] = useState(post.like_count);
+  const [isPending, startLikeTransition] = useTransition();
 
   function handleLike(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    setLiked((prev) => !prev);
-    setLikeCount((prev) => liked ? prev - 1 : prev + 1);
+    if (isPending) return;
+
+    // Optimistic UI: actualizamos local de inmediato y llamamos al server.
+    // Si el server falla, revertimos.
+    const prevLiked = liked;
+    const prevCount = likeCount;
+    setLiked(!prevLiked);
+    setLikeCount(prevLiked ? prevCount - 1 : prevCount + 1);
+
+    startLikeTransition(async () => {
+      const res = await toggleLike(post.id);
+      if (!res.ok) {
+        setLiked(prevLiked);
+        setLikeCount(prevCount);
+      }
+    });
   }
 
   const typeBadge = post.post_type ? POST_TYPE_BADGE[post.post_type] : null;

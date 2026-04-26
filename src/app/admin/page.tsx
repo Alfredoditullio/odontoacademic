@@ -39,6 +39,8 @@ export default async function AdminDashboard() {
     { label: 'Suscriptores activos', value: subscribedUsers ?? 0, icon: 'mark_email_read', gradient: 'from-emerald-500 to-teal-500' },
     { label: 'Desuscritos', value: unsubscribed, icon: 'unsubscribe', gradient: 'from-slate-400 to-slate-500' },
     { label: 'Tasa de suscripción', value: `${subscribeRate}%`, icon: 'trending_up', gradient: 'from-violet-500 to-purple-500' },
+    { label: 'Campañas creadas', value: totalCampaigns ?? 0, icon: 'campaign', gradient: 'from-amber-500 to-orange-500' },
+    { label: 'Campañas enviadas', value: sentCampaigns ?? 0, icon: 'send', gradient: 'from-rose-500 to-pink-500' },
   ];
 
   return (

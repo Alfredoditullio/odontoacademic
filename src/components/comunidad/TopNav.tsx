@@ -3,12 +3,19 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import { NotificationBell } from './NotificationBell';
+import { MessagesBadge } from './MessagesBadge';
 
 function initials(name: string) {
   return name.trim().split(' ').filter(Boolean).map((w) => w[0]).join('').toUpperCase().slice(0, 2) || 'OL';
 }
 
-export function CommunityTopNav() {
+interface CommunityTopNavProps {
+  /** Conteo precalculado server-side para evitar el fetch cliente al render. */
+  initialUnreadNotifications?: number;
+}
+
+export function CommunityTopNav({ initialUnreadNotifications = 0 }: CommunityTopNavProps) {
   const { profile, signOut } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -45,23 +52,11 @@ export function CommunityTopNav() {
         <div className="flex-1" />
 
         <div className="flex items-center gap-2">
-          {/* Notifications */}
-          <Link
-            href="/comunidad"
-            className="relative size-10 rounded-full bg-white/15 backdrop-blur flex items-center justify-center hover:bg-white/25 transition"
-            title="Notificaciones"
-          >
-            <span className="material-symbols-outlined text-[22px] text-white">notifications</span>
-          </Link>
+          {/* Notifications con realtime */}
+          <NotificationBell initialUnreadCount={initialUnreadNotifications} />
 
-          {/* Messages */}
-          <Link
-            href="/comunidad/mensajes"
-            className="relative size-10 rounded-full bg-white/15 backdrop-blur flex items-center justify-center hover:bg-white/25 transition"
-            title="Mensajes"
-          >
-            <span className="material-symbols-outlined text-[22px] text-white">mail</span>
-          </Link>
+          {/* Messages con badge polling */}
+          <MessagesBadge />
 
           {/* Avatar dropdown */}
           <div className="relative" ref={dropdownRef}>

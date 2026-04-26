@@ -1,42 +1,29 @@
-'use client';
+/**
+ * Perfil público de usuario. Server Component:
+ *  - Resuelve handle → perfil + is_following + últimos 5 posts (one-shot via getProfileByHandle).
+ *  - <FollowButton> es un client island con optimistic UI + RPC toggle_follow.
+ *  - "Pedir derivación" se mantiene como UI mock — pendiente conectar al
+ *    sistema de mensajes prefilled o a un nuevo flow específico.
+ */
 
-import { useState, use } from 'react';
 import Link from 'next/link';
-import { MOCK_PROFILES, MOCK_STUDENT_PROFILES, MOCK_POSTS } from '@/data/mock-community';
+import { notFound } from 'next/navigation';
+import { getProfileByHandle } from '@/lib/queries/community';
 import { PostCard } from '@/components/comunidad/PostCard';
+import { FollowButton } from '@/components/comunidad/FollowButton';
 import { initials, timeAgo } from '@/lib/utils';
 
-export default function ProfilePage({ params }: { params: Promise<{ handle: string }> }) {
-  const { handle } = use(params);
+export const dynamic = 'force-dynamic';
 
-  const profile =
-    MOCK_PROFILES.find((p) => p.handle === handle) ??
-    MOCK_STUDENT_PROFILES.find((p) => p.handle === handle);
+export default async function ProfilePage({
+  params,
+}: {
+  params: Promise<{ handle: string }>;
+}) {
+  const { handle } = await params;
+  const { profile, isFollowing, recentPosts } = await getProfileByHandle(handle);
 
-  const [following, setFollowing] = useState(false);
-  const [followerCount, setFollowerCount] = useState(profile?.follower_count ?? 0);
-  const [derivacionSent, setDerivacionSent] = useState(false);
-
-  if (!profile) {
-    return (
-      <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-        <p className="text-slate-500">Perfil no encontrado</p>
-        <Link href="/comunidad" className="text-primary font-semibold mt-4 inline-block">Volver al feed</Link>
-      </div>
-    );
-  }
-
-  const posts = MOCK_POSTS.filter((p) => p.author_id === profile.user_id);
-
-  function handleFollow() {
-    setFollowing((prev) => !prev);
-    setFollowerCount((prev) => following ? prev - 1 : prev + 1);
-  }
-
-  function handleDerivacion() {
-    setDerivacionSent(true);
-    setTimeout(() => setDerivacionSent(false), 3000);
-  }
+  if (!profile) notFound();
 
   const isStudent = profile.role === 'student';
 
@@ -52,27 +39,25 @@ export default function ProfilePage({ params }: { params: Promise<{ handle: stri
         <div className="px-6 pb-6">
           {/* Avatar row */}
           <div className="flex items-end justify-between -mt-10 mb-4">
-            <div className={`size-20 rounded-full border-4 border-white shadow-md flex items-center justify-center font-black text-white text-2xl ${
+            <div className={`size-20 rounded-full border-4 border-white shadow-md flex items-center justify-center font-black text-white text-2xl overflow-hidden ${
               isStudent ? 'bg-gradient-to-br from-indigo-500 to-violet-600' : 'bg-gradient-to-br from-sky-500 to-teal-600'
             }`}>
-              {initials(profile.display_name)}
+              {profile.avatar_url
+                /* eslint-disable-next-line @next/next/no-img-element */
+                ? <img src={profile.avatar_url} alt="" className="size-full object-cover" />
+                : initials(profile.display_name)
+              }
             </div>
 
             {/* Action buttons */}
             <div className="flex items-center gap-2 mb-1">
-              <button
-                onClick={handleFollow}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition ${
-                  following
-                    ? 'bg-slate-100 text-slate-700 hover:bg-red-50 hover:text-red-600 border border-slate-200'
-                    : 'bg-primary text-white hover:bg-primary/90'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[16px]">
-                  {following ? 'person_remove' : 'person_add'}
-                </span>
-                {following ? 'Siguiendo' : 'Seguir'}
-              </button>
+              <FollowButton
+                targetUserId={profile.user_id}
+                targetHandle={profile.handle}
+                initialIsFollowing={isFollowing}
+                initialFollowerCount={profile.follower_count}
+                compact
+              />
 
               <Link
                 href={`/comunidad/mensajes/${profile.handle}`}
@@ -81,23 +66,6 @@ export default function ProfilePage({ params }: { params: Promise<{ handle: stri
                 <span className="material-symbols-outlined text-[16px]">mail</span>
                 Mensaje
               </Link>
-
-              {profile.accepts_referrals && !isStudent && (
-                <button
-                  onClick={handleDerivacion}
-                  disabled={derivacionSent}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition border ${
-                    derivacionSent
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                      : 'bg-white text-emerald-700 border-emerald-300 hover:bg-emerald-50'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[16px]">
-                    {derivacionSent ? 'check_circle' : 'swap_horiz'}
-                  </span>
-                  {derivacionSent ? 'Solicitud enviada' : 'Pedir derivación'}
-                </button>
-              )}
             </div>
           </div>
 
@@ -118,7 +86,7 @@ export default function ProfilePage({ params }: { params: Promise<{ handle: stri
               )}
             </div>
 
-            <p className="text-sm text-slate-400 mt-0.5">@{profile.handle}</p>
+            {profile.handle && <p className="text-sm text-slate-400 mt-0.5">@{profile.handle}</p>}
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 mt-2">
               {isStudent ? (
@@ -158,14 +126,14 @@ export default function ProfilePage({ params }: { params: Promise<{ handle: stri
 
             <div className="flex items-center gap-5 mt-3">
               <span className="text-sm">
-                <span className="font-bold text-slate-900">{followerCount}</span>{' '}
-                <span className="text-slate-500">{followerCount === 1 ? 'seguidor' : 'seguidores'}</span>
+                <span className="font-bold text-slate-900">{profile.follower_count}</span>{' '}
+                <span className="text-slate-500">{profile.follower_count === 1 ? 'seguidor' : 'seguidores'}</span>
               </span>
               <span className="text-sm">
                 <span className="font-bold text-slate-900">{profile.following_count}</span>{' '}
                 <span className="text-slate-500">siguiendo</span>
               </span>
-              {!isStudent && (
+              {!isStudent && profile.reputation_points > 0 && (
                 <span className="text-sm">
                   <span className="font-bold text-primary">{profile.reputation_points}</span>{' '}
                   <span className="text-slate-500">pts reputación</span>
@@ -183,14 +151,14 @@ export default function ProfilePage({ params }: { params: Promise<{ handle: stri
       {/* Posts */}
       <div className="space-y-3">
         <h2 className="font-bold text-slate-900 px-1">
-          Posts {posts.length > 0 && <span className="text-slate-400 font-normal text-sm">({posts.length})</span>}
+          Posts {recentPosts.length > 0 && <span className="text-slate-400 font-normal text-sm">({recentPosts.length})</span>}
         </h2>
-        {posts.length === 0 ? (
+        {recentPosts.length === 0 ? (
           <div className="bg-white rounded-xl border border-slate-200 p-6 text-center text-sm text-slate-400">
             Todavía no publicó nada.
           </div>
         ) : (
-          posts.map((p) => <PostCard key={p.id} post={p} />)
+          recentPosts.map((p) => <PostCard key={p.id} post={p} />)
         )}
       </div>
 
