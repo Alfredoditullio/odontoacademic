@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSubmitPostFromModal } from '@/lib/hooks/useSubmitPostFromModal';
 
 const POST_TYPES = [
   {
@@ -45,9 +46,10 @@ const SUGGESTED_TAGS = [
   '#pediatría', '#primeravez', '#residente',
 ];
 
-interface Props { onClose: () => void; }
+interface Props { onClose: () => void; onPosted?: (postId: string) => void; }
 
-export function StudentPostModal({ onClose }: Props) {
+export function StudentPostModal({ onClose, onPosted }: Props) {
+  const { submit, pending, error } = useSubmitPostFromModal({ onPosted });
   const [type, setType] = useState<'doubt' | 'practice' | 'campus' | 'debate'>('doubt');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -55,7 +57,6 @@ export function StudentPostModal({ onClose }: Props) {
   const [urgency, setUrgency] = useState('Sin urgencia');
   const [tags, setTags] = useState<string[]>([]);
   const [pollOptions, setPollOptions] = useState(['', '']);
-  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -72,25 +73,6 @@ export function StudentPostModal({ onClose }: Props) {
   const canSubmit = title.trim().length > 0 &&
     (type !== 'debate' || pollOptions.filter((o) => o.trim()).length >= 2);
 
-  if (submitted) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div className="bg-white rounded-2xl p-10 max-w-sm w-full text-center shadow-2xl animate-fade-in-up">
-          <div className="text-5xl mb-4">🎓</div>
-          <h2 className="text-xl font-extrabold text-slate-900 mb-2">¡Tu post está en Carrera & Estudios!</h2>
-          <p className="text-slate-500 text-sm mb-6">
-            Otros estudiantes y también odontólogos ya pueden verlo y responder. Las dudas académicas son bienvenidas.
-          </p>
-          <button
-            onClick={onClose}
-            className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition"
-          >
-            Ver el feed
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -320,16 +302,34 @@ export function StudentPostModal({ onClose }: Props) {
           )}
 
           <div className="flex items-center justify-end gap-3">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition">
+            {error && <span className="text-xs text-red-600 mr-2">{error}</span>}
+            <button onClick={onClose} disabled={pending} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition disabled:opacity-50">
               Cancelar
             </button>
             <button
-              onClick={() => { if (canSubmit) setSubmitted(true); }}
-              disabled={!canSubmit}
+              onClick={() => {
+                if (!canSubmit || pending) return;
+                const validPollOpts = pollOptions.map((o) => o.trim()).filter(Boolean);
+                submit({
+                  categorySlug: 'carrera-estudios',
+                  title,
+                  body: body.trim() || title,
+                  metadata: {
+                    student_post_type: type,
+                    study_year: studyYear || null,
+                    urgency,
+                    tags,
+                  },
+                  poll: type === 'debate' && validPollOpts.length >= 2
+                    ? { question: title, options: validPollOpts }
+                    : undefined,
+                });
+              }}
+              disabled={!canSubmit || pending}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
             >
-              <span className="material-symbols-outlined text-[18px]">send</span>
-              Publicar
+              <span className={`material-symbols-outlined text-[18px] ${pending ? 'animate-spin' : ''}`}>{pending ? 'progress_activity' : 'send'}</span>
+              {pending ? 'Publicando…' : 'Publicar'}
             </button>
           </div>
         </div>

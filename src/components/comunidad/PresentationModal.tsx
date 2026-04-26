@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSubmitPostFromModal } from '@/lib/hooks/useSubmitPostFromModal';
 
 const INTERESTS = [
   'Implantología', 'Periodoncia', 'Endodoncia', 'Ortodoncia', 'Cirugía Oral',
@@ -44,7 +45,23 @@ export function PresentationModal({ onClose, onPosted }: Props) {
   const [lookingFor, setLookingFor] = useState('');
   const [funFact, setFunFact] = useState('');
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const [submitted, setSubmitted] = useState(false);
+
+  const { submit, pending, error } = useSubmitPostFromModal({
+    onPosted: (postId) => {
+      // Mantenemos el record en localStorage para que `/comunidad/c/presentaciones`
+      // siga sabiendo que ya te presentaste y aplique la regla de "1 cada 6 meses".
+      const record: PresentationRecord = {
+        postedAt: new Date().toISOString(),
+        name: name.trim(),
+        specialty: specialty.trim(),
+        country,
+      };
+      try { localStorage.setItem(LS_KEY, JSON.stringify(record)); } catch { /* noop */ }
+      onPosted(record);
+      // No llamamos onClose porque el hook ya hace router.push al detail del post.
+      void postId;
+    },
+  });
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -58,37 +75,33 @@ export function PresentationModal({ onClose, onPosted }: Props) {
   }
 
   function handleSubmit() {
-    if (!name.trim() || !specialty.trim() || !country) return;
-    const record: PresentationRecord = { postedAt: new Date().toISOString(), name: name.trim(), specialty: specialty.trim(), country };
-    localStorage.setItem(LS_KEY, JSON.stringify(record));
-    setSubmitted(true);
-    onPosted(record);
+    if (!canSubmit || pending) return;
+    // Construimos el cuerpo de la presentación a partir de los campos del modal.
+    const lines: string[] = [
+      `Hola, soy ${name.trim()}.`,
+      `Soy ${specialty.trim()} (${experience}).`,
+      `Vivo en ${city.trim() ? `${city.trim()}, ` : ''}${country}.`,
+    ];
+    if (lookingFor.trim()) lines.push(`Lo que busco en OdontoLatam: ${lookingFor.trim()}`);
+    if (funFact.trim())    lines.push(`Dato curioso: ${funFact.trim()}`);
+    if (selectedInterests.length > 0) lines.push(`Mis intereses: ${selectedInterests.join(', ')}.`);
+
+    submit({
+      categorySlug: 'presentaciones',
+      title: `${name.trim()} — ${specialty.trim()}`,
+      body: lines.join('\n\n'),
+      metadata: {
+        presentation_name: name.trim(),
+        presentation_specialty: specialty.trim(),
+        presentation_country: country,
+        presentation_city: city.trim() || null,
+        presentation_experience: experience,
+        presentation_interests: selectedInterests,
+      },
+    });
   }
 
   const canSubmit = name.trim() && specialty.trim() && country && experience;
-
-  if (submitted) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div className="bg-white rounded-2xl p-10 max-w-sm w-full text-center shadow-2xl animate-fade-in-up">
-          <div className="size-16 rounded-full bg-sky-100 flex items-center justify-center mx-auto mb-4">
-            <span className="material-symbols-outlined text-sky-500 text-[36px]">waving_hand</span>
-          </div>
-          <h2 className="text-xl font-extrabold text-slate-900 mb-2">¡Bienvenido a OdontoLatam!</h2>
-          <p className="text-slate-500 text-sm mb-5">Tu presentación fue publicada. La comunidad ya puede conocerte.</p>
-          <p className="text-xs text-slate-400 bg-slate-50 rounded-xl px-4 py-3">
-            Podés actualizar tu presentación en 6 meses.
-          </p>
-          <button
-            onClick={onClose}
-            className="mt-5 bg-gradient-to-r from-sky-600 to-teal-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition"
-          >
-            Ver presentaciones
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -240,16 +253,17 @@ export function PresentationModal({ onClose, onPosted }: Props) {
             {' '}Podés editar esto en tu perfil después
           </p>
           <div className="flex items-center gap-2">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition">
+            {error && <span className="text-xs text-red-600 mr-2">{error}</span>}
+            <button onClick={onClose} disabled={pending} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition disabled:opacity-50">
               Cancelar
             </button>
             <button
               onClick={handleSubmit}
-              disabled={!canSubmit}
+              disabled={!canSubmit || pending}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
             >
-              <span className="material-symbols-outlined text-[18px]">waving_hand</span>
-              Publicar presentación
+              <span className={`material-symbols-outlined text-[18px] ${pending ? 'animate-spin' : ''}`}>{pending ? 'progress_activity' : 'waving_hand'}</span>
+              {pending ? 'Publicando…' : 'Publicar presentación'}
             </button>
           </div>
         </div>

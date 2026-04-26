@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/comunidad/ImageUpload';
+import { useSubmitPostFromModal } from '@/lib/hooks/useSubmitPostFromModal';
 
 /* ─── Static data ─── */
 const LISTING_TYPES = [
@@ -63,9 +64,10 @@ const COUNTRIES = [
 ];
 
 /* ─── Types ─── */
-interface Props { onClose: () => void; }
+interface Props { onClose: () => void; onPosted?: (postId: string) => void; }
 
-export function MarketModal({ onClose }: Props) {
+export function MarketModal({ onClose, onPosted }: Props) {
+  const { submit, pending, error } = useSubmitPostFromModal({ onPosted });
   const [listingType, setListingType] = useState<'sell' | 'buy' | 'trade'>('sell');
   const [title, setTitle] = useState('');
   const [itemCategory, setItemCategory] = useState('');
@@ -78,7 +80,6 @@ export function MarketModal({ onClose }: Props) {
   const [description, setDescription] = useState('');
   const [tradeFor, setTradeFor] = useState('');
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
@@ -105,35 +106,6 @@ export function MarketModal({ onClose }: Props) {
     (isBuy || condition) &&
     (isTrade ? tradeFor.trim() : true);
 
-  if (submitted) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div className="bg-white rounded-2xl p-10 max-w-sm w-full text-center shadow-2xl animate-fade-in-up">
-          <div className="size-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
-            <span className="material-symbols-outlined text-emerald-600 text-[36px]">
-              {isSell ? 'sell' : isBuy ? 'shopping_cart' : 'swap_horiz'}
-            </span>
-          </div>
-          <h2 className="text-xl font-extrabold text-slate-900 mb-2">¡Publicación enviada!</h2>
-          <p className="text-slate-500 text-sm mb-4">
-            Tu aviso de <strong>{selectedType.label}</strong> fue publicado en el Mercado de OdontoLatam.
-          </p>
-          <div className="bg-slate-50 rounded-xl px-4 py-3 text-left mb-5">
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              <span className="material-symbols-outlined text-[13px] align-middle text-slate-400 mr-0.5">info</span>
-              Los interesados se contactarán con vos directamente. OdontoLatam no participa en la transacción.
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition"
-          >
-            Ver el Mercado
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -458,16 +430,34 @@ export function MarketModal({ onClose }: Props) {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition">
+            {error && <span className="text-xs text-red-600 mr-2">{error}</span>}
+            <button onClick={onClose} disabled={pending} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition disabled:opacity-50">
               Cancelar
             </button>
             <button
-              onClick={() => { if (canSubmit) setSubmitted(true); }}
-              disabled={!canSubmit}
+              onClick={() => {
+                if (!canSubmit || pending) return;
+                submit({
+                  categorySlug: 'mercado',
+                  title,
+                  body: isTrade ? `${description}\n\nBusco a cambio: ${tradeFor}` : description,
+                  images,
+                  metadata: {
+                    listing_type: listingType,
+                    item_category: itemCategory,
+                    price: priceConvenir ? null : (price || null),
+                    currency: priceConvenir ? null : currency,
+                    condition: condition || null,
+                    location: `${city.trim()}, ${country}`,
+                    is_sold: false,
+                  },
+                });
+              }}
+              disabled={!canSubmit || pending}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
             >
-              <span className="material-symbols-outlined text-[18px]">publish</span>
-              Publicar aviso
+              <span className={`material-symbols-outlined text-[18px] ${pending ? 'animate-spin' : ''}`}>{pending ? 'progress_activity' : 'publish'}</span>
+              {pending ? 'Publicando…' : 'Publicar aviso'}
             </button>
           </div>
         </div>

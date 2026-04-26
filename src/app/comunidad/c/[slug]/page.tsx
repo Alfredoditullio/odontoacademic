@@ -18,6 +18,7 @@ import {
   getLikedPostIdsForCurrentUser,
 } from '@/lib/queries/community';
 import { PostCard } from '@/components/comunidad/PostCard';
+import { CategoryActions } from '@/components/comunidad/CategoryActions';
 
 // Cache compartido por slug. Invalidación: revalidatePath cuando se crea/borra
 // un post de esta categoría (lo hace `createPost` en server actions).
@@ -58,14 +59,7 @@ export default async function CategoryPage({
           </div>
 
           {category.post_policy === 'open' && (
-            <Link
-              href={newPostHref}
-              className="shrink-0 inline-flex items-center gap-2 bg-white text-slate-800 font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-slate-50 transition shadow-sm"
-              style={{ color: category.color ?? '#0284c7' }}
-            >
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              <span className="hidden sm:inline">Publicar</span>
-            </Link>
+            <CategoryActions categorySlug={category.slug} categoryColor={category.color} />
           )}
         </div>
       </div>

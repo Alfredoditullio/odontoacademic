@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/comunidad/ImageUpload';
+import { useSubmitPostFromModal } from '@/lib/hooks/useSubmitPostFromModal';
 
 const SPECIALTIES = [
   { value: 'periodoncia',      label: 'Periodoncia',         icon: 'genetics',           specialists: 23 },
@@ -51,9 +52,11 @@ const POST_TYPES = [
 
 interface Props {
   onClose: () => void;
+  onPosted?: (postId: string) => void;
 }
 
-export function ClinicalPostModal({ onClose }: Props) {
+export function ClinicalPostModal({ onClose, onPosted }: Props) {
+  const { submit, pending, error } = useSubmitPostFromModal({ onPosted });
   const [type, setType] = useState<'help' | 'resolved' | 'debate'>('help');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -63,7 +66,6 @@ export function ClinicalPostModal({ onClose }: Props) {
   const [outcome, setOutcome] = useState('');
   const [addPoll, setAddPoll] = useState(false);
   const [pollOptions, setPollOptions] = useState(['', '']);
-  const [submitted, setSubmitted] = useState(false);
   const [images, setImages] = useState<File[]>([]);
 
   // lock scroll while open
@@ -85,31 +87,6 @@ export function ClinicalPostModal({ onClose }: Props) {
     setPollOptions(pollOptions.map((o, idx) => idx === i ? val : o));
   }
 
-  if (submitted) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div className="bg-white rounded-2xl p-10 max-w-sm w-full text-center shadow-2xl animate-fade-in-up">
-          <div className="size-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
-            <span className="material-symbols-outlined text-emerald-600 text-[36px]">check_circle</span>
-          </div>
-          <h2 className="text-xl font-extrabold text-slate-900 mb-2">¡Post publicado!</h2>
-          <p className="text-slate-500 text-sm mb-2">Tu post fue publicado en Casos Clínicos.</p>
-          {type === 'help' && specialty && selectedSpecialty && (
-            <p className="text-sm font-semibold text-sky-700 bg-sky-50 rounded-xl px-4 py-2 mb-4">
-              <span className="material-symbols-outlined text-[15px] align-middle mr-1">notifications</span>
-              Se notificó a <strong>{selectedSpecialty.specialists} especialistas</strong> en {selectedSpecialty.label}.
-            </p>
-          )}
-          <button
-            onClick={onClose}
-            className="bg-gradient-to-r from-sky-600 to-teal-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition"
-          >
-            Ver el feed
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -376,16 +353,35 @@ export function ClinicalPostModal({ onClose }: Props) {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition">
+            {error && <span className="text-xs text-red-600 mr-2">{error}</span>}
+            <button onClick={onClose} disabled={pending} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition disabled:opacity-50">
               Cancelar
             </button>
             <button
-              onClick={() => { if (title.trim() && body.trim()) setSubmitted(true); }}
-              disabled={!title.trim() || !body.trim()}
+              onClick={() => {
+                if (!title.trim() || !body.trim()) return;
+                const validPollOpts = pollOptions.map((o) => o.trim()).filter(Boolean);
+                submit({
+                  categorySlug: 'casos-clinicos',
+                  title,
+                  body: outcome ? `${body}\n\n— Resultado / desenlace —\n${outcome}` : body,
+                  postType: type,
+                  images,
+                  metadata: {
+                    urgent,
+                    specialty: specialty || null,
+                    has_outcome: showOutcome,
+                  },
+                  poll: addPoll && validPollOpts.length >= 2
+                    ? { question: '¿Qué harías?', options: validPollOpts }
+                    : undefined,
+                });
+              }}
+              disabled={!title.trim() || !body.trim() || pending}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
             >
-              <span className="material-symbols-outlined text-[18px]">send</span>
-              Publicar
+              <span className={`material-symbols-outlined text-[18px] ${pending ? 'animate-spin' : ''}`}>{pending ? 'progress_activity' : 'send'}</span>
+              {pending ? 'Publicando…' : 'Publicar'}
             </button>
           </div>
         </div>

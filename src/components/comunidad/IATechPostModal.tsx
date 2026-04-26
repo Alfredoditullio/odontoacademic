@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/comunidad/ImageUpload';
+import { useSubmitPostFromModal } from '@/lib/hooks/useSubmitPostFromModal';
 
 const POST_TYPES = [
   {
@@ -47,9 +48,10 @@ const POLL_DEFAULTS: Record<string, string[]> = {
   debate:   ['A favor', 'En contra', 'Depende del caso'],
 };
 
-interface Props { onClose: () => void; }
+interface Props { onClose: () => void; onPosted?: (postId: string) => void; }
 
-export function IATechPostModal({ onClose }: Props) {
+export function IATechPostModal({ onClose, onPosted }: Props) {
+  const { submit, pending, error } = useSubmitPostFromModal({ onPosted });
   const [type, setType]           = useState<'tool' | 'question' | 'review' | 'debate'>('tool');
   const [title, setTitle]         = useState('');
   const [body, setBody]           = useState('');
@@ -57,7 +59,6 @@ export function IATechPostModal({ onClose }: Props) {
   const [tags, setTags]           = useState<string[]>([]);
   const [addPoll, setAddPoll]     = useState(false);
   const [pollOptions, setPollOptions] = useState(POLL_DEFAULTS['tool']);
-  const [submitted, setSubmitted] = useState(false);
   const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
@@ -80,23 +81,8 @@ export function IATechPostModal({ onClose }: Props) {
     setAddPoll(defaults.length >= 2);
   }
 
-  const selectedType = POST_TYPES.find((t) => t.value === type)!;
   const canSubmit = title.trim().length > 0 && body.trim().length > 0;
 
-  if (submitted) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div className="bg-white rounded-2xl p-10 max-w-sm w-full text-center shadow-2xl">
-          <div className="text-5xl mb-4">{selectedType.emoji}</div>
-          <h2 className="text-xl font-extrabold text-slate-900 mb-2">¡Publicado en IA y Tecnología!</h2>
-          <p className="text-slate-500 text-sm mb-6">La comunidad ya puede verlo y comentar.</p>
-          <button onClick={onClose} className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition">
-            Ver el feed
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -287,14 +273,32 @@ export function IATechPostModal({ onClose }: Props) {
             ))}
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition">Cancelar</button>
+            {error && <span className="text-xs text-red-600 mr-2">{error}</span>}
+            <button onClick={onClose} disabled={pending} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition disabled:opacity-50">Cancelar</button>
             <button
-              onClick={() => { if (canSubmit) setSubmitted(true); }}
-              disabled={!canSubmit}
+              onClick={() => {
+                if (!canSubmit || pending) return;
+                const validPollOpts = pollOptions.map((o) => o.trim()).filter(Boolean);
+                submit({
+                  categorySlug: 'ia-tecnologia',
+                  title,
+                  body: link ? `${body}\n\nLink: ${link}` : body,
+                  images,
+                  metadata: {
+                    iatech_type: type,
+                    tags,
+                    link: link || null,
+                  },
+                  poll: addPoll && validPollOpts.length >= 2
+                    ? { question: title, options: validPollOpts }
+                    : undefined,
+                });
+              }}
+              disabled={!canSubmit || pending}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
             >
-              <span className="material-symbols-outlined text-[18px]">send</span>
-              Publicar
+              <span className={`material-symbols-outlined text-[18px] ${pending ? 'animate-spin' : ''}`}>{pending ? 'progress_activity' : 'send'}</span>
+              {pending ? 'Publicando…' : 'Publicar'}
             </button>
           </div>
         </div>

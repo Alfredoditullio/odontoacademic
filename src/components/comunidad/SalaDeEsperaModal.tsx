@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/comunidad/ImageUpload';
+import { useSubmitPostFromModal } from '@/lib/hooks/useSubmitPostFromModal';
 
 const POST_TYPES = [
   {
@@ -37,15 +38,15 @@ const RULES = [
   'Si un colega pide que borres algo que lo involucra, hacelo.',
 ];
 
-interface Props { onClose: () => void; }
+interface Props { onClose: () => void; onPosted?: (postId: string) => void; }
 
-export function SalaDeEsperaModal({ onClose }: Props) {
+export function SalaDeEsperaModal({ onClose, onPosted }: Props) {
+  const { submit, pending, error } = useSubmitPostFromModal({ onPosted });
   const [type, setType] = useState<'meme' | 'story' | 'poll'>('meme');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '', '']);
   const [rulesOk, setRulesOk] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
@@ -61,23 +62,6 @@ export function SalaDeEsperaModal({ onClose }: Props) {
     (type !== 'poll' || pollOptions.filter((o) => o.trim()).length >= 2) &&
     (type !== 'meme' || images.length > 0);
 
-  if (submitted) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div className="bg-white rounded-2xl p-10 max-w-sm w-full text-center shadow-2xl animate-fade-in-up">
-          <div className="text-5xl mb-4">🎉</div>
-          <h2 className="text-xl font-extrabold text-slate-900 mb-2">¡Publicado en la Sala de Espera!</h2>
-          <p className="text-slate-500 text-sm mb-5">La comunidad ya puede verlo. Esperá los likes. 😄</p>
-          <button
-            onClick={onClose}
-            className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition"
-          >
-            Ver el feed
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -232,16 +216,30 @@ export function SalaDeEsperaModal({ onClose }: Props) {
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0 bg-white sm:rounded-b-2xl">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition">
+          {error && <span className="text-xs text-red-600 mr-2">{error}</span>}
+          <button onClick={onClose} disabled={pending} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition disabled:opacity-50">
             Cancelar
           </button>
           <button
-            onClick={() => { if (canSubmit) setSubmitted(true); }}
-            disabled={!canSubmit}
+            onClick={() => {
+              if (!canSubmit || pending) return;
+              const validPollOpts = pollOptions.map((o) => o.trim()).filter(Boolean);
+              submit({
+                categorySlug: 'sala-de-espera',
+                title,
+                body: body.trim() || title,
+                images,
+                metadata: { sala_type: type },
+                poll: type === 'poll' && validPollOpts.length >= 2
+                  ? { question: title, options: validPollOpts }
+                  : undefined,
+              });
+            }}
+            disabled={!canSubmit || pending}
             className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
           >
-            <span className="text-base">😄</span>
-            Publicar
+            <span className="text-base">{pending ? '⏳' : '😄'}</span>
+            {pending ? 'Publicando…' : 'Publicar'}
           </button>
         </div>
       </div>
